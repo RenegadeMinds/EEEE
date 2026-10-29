@@ -7,7 +7,7 @@ namespace MarkdownMidget.Tests;
 /// registry. Not covered: the one-line public wrappers, and the stray cleanup Unregister runs for real.</summary>
 public class RegistrationTests
 {
-    private const string Exe = @"C:\Users\u\AppData\Local\Programs\MarkdownMidget\MarkdownMidget.exe";
+    private const string Exe = @"C:\Users\u\AppData\Local\Programs\MMEEEE\MMEEEE.exe";
     private const string Command = $"\"{Exe}\" \"%1\"", Icon = $"\"{Exe}\",0", Classes = @"Software\Classes\";
 
     private sealed class FakeRegistry : RegistrationService.IRegistryValues
@@ -35,7 +35,7 @@ public class RegistrationTests
     {
         var reg = new FakeRegistry();
         reg.Register(Exe);
-        Assert.Equal($"\"{Exe}\" \"%1\"", reg.Values[@"Software\Classes\MarkdownMidget.Document\shell\open\command|"]);
+        Assert.Equal($"\"{Exe}\" \"%1\"", reg.Values[@"Software\Classes\MMEEEE.Document\shell\open\command|"]);
         reg.Log.Clear();
         reg.Register(Exe);
         Assert.Empty(reg.Log);
@@ -46,7 +46,7 @@ public class RegistrationTests
     public void An_update_to_a_new_exe_path_rewrites_only_the_path_values_in_place()
     {
         var reg = new FakeRegistry();
-        reg.Register(@"D:\old\MarkdownMidget.exe");
+        reg.Register(@"D:\old\MMEEEE.exe");
         var keys = reg.Values.Keys.ToList(); reg.Log.Clear();
         reg.Register(Exe);
         Assert.Equal(Enumerable.Repeat(true, 6), reg.Log.Select(l => l.StartsWith("set ")));   // command and icon: both ProgIDs, Applications
@@ -59,12 +59,12 @@ public class RegistrationTests
     public void Registration_keeps_a_users_default_and_entries_older_versions_left()
     {
         var reg = new FakeRegistry();
-        reg.Values[@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.md\UserChoice|ProgId"] = @"Applications\MarkdownMidget.exe";
-        reg.Values[@"Software\Classes\MarkdownMidget.Document|"] = "Markdown Document";
+        reg.Values[@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.md\UserChoice|ProgId"] = @"Applications\MMEEEE.exe";
+        reg.Values[@"Software\Classes\MMEEEE.Document|"] = "Markdown Document";
         var before = reg.Values.ToList();
         reg.Register(Exe);
         Assert.All(before, kv => Assert.Equal(kv.Value, reg.Values[kv.Key]));
-        Assert.DoesNotContain(reg.Log, l => l.StartsWith("delete ") || l == @"set Software\Classes\MarkdownMidget.Document|");
+        Assert.DoesNotContain(reg.Log, l => l.StartsWith("delete ") || l == @"set Software\Classes\MMEEEE.Document|");
     }
 
     [Fact]
@@ -81,16 +81,16 @@ public class RegistrationTests
     public void A_first_registration_writes_exactly_these_24_values_and_kinds()
     {
         var reg = new FakeRegistry(); reg.Register(Exe);
-        const string Apps = Classes + @"Applications\MarkdownMidget.exe", Caps = @"Software\Funcular Labs\Markdown Midget\Capabilities";
-        List<string> expected = new([$"{Apps}|FriendlyAppName=SZ Markdown Midget", $@"{Apps}\SupportedTypes|.md=SZ ", $@"{Apps}\SupportedTypes|.mdenc=SZ ",
-            $@"{Apps}\shell\open\command|=SZ {Command}", $@"{Apps}\DefaultIcon|=SZ {Icon}", $@"{Classes}.md\OpenWithProgids|MarkdownMidget.Document=NONE",
-            $@"{Classes}.mdenc|=SZ MarkdownMidget.SecureDocument", $@"{Classes}.mdenc\OpenWithProgids|MarkdownMidget.SecureDocument=NONE",
-            $"{Caps}|ApplicationName=SZ Markdown Midget", $"{Caps}|ApplicationDescription=SZ WYSIWYG markdown editor — WordPad-style editing with markdown as the native format.",
-            $@"{Caps}\FileAssociations|.md=SZ MarkdownMidget.Document", $@"{Caps}\FileAssociations|.markdown=SZ MarkdownMidget.Document",
-            $@"{Caps}\FileAssociations|.mdenc=SZ MarkdownMidget.SecureDocument", $@"Software\RegisteredApplications|Markdown Midget=SZ {Caps}"]);
-        foreach (var (pid, type) in new[] { ("MarkdownMidget.Document", "Markdown Document"), ("MarkdownMidget.SecureDocument", "Markdown Midget Encrypted Document") })
+        const string Apps = Classes + @"Applications\MMEEEE.exe", Caps = @"Software\RenegadeMinds\MMEEEE\Capabilities";
+        List<string> expected = new([$"{Apps}|FriendlyAppName=SZ MMEEEE", $@"{Apps}\SupportedTypes|.md=SZ ", $@"{Apps}\SupportedTypes|.mdenc=SZ ",
+            $@"{Apps}\shell\open\command|=SZ {Command}", $@"{Apps}\DefaultIcon|=SZ {Icon}", $@"{Classes}.md\OpenWithProgids|MMEEEE.Document=NONE",
+            $@"{Classes}.mdenc|=SZ MMEEEE.SecureDocument", $@"{Classes}.mdenc\OpenWithProgids|MMEEEE.SecureDocument=NONE",
+            $"{Caps}|ApplicationName=SZ MMEEEE", $"{Caps}|ApplicationDescription=SZ WYSIWYG markdown editor — WordPad-style editing with markdown as the native format.",
+            $@"{Caps}\FileAssociations|.md=SZ MMEEEE.Document", $@"{Caps}\FileAssociations|.markdown=SZ MMEEEE.Document",
+            $@"{Caps}\FileAssociations|.mdenc=SZ MMEEEE.SecureDocument", $@"Software\RegisteredApplications|MMEEEE=SZ {Caps}"]);
+        foreach (var (pid, type) in new[] { ("MMEEEE.Document", "Markdown Document"), ("MMEEEE.SecureDocument", "MMEEEE Encrypted Document") })
             expected.AddRange([$@"{Classes}{pid}|=SZ {type}", $@"{Classes}{pid}|FriendlyTypeName=SZ {type}", $@"{Classes}{pid}\DefaultIcon|=SZ {Icon}",
-                $@"{Classes}{pid}\shell\open|FriendlyAppName=SZ Markdown Midget", $@"{Classes}{pid}\shell\open\command|=SZ {Command}"]);
+                $@"{Classes}{pid}\shell\open|FriendlyAppName=SZ MMEEEE", $@"{Classes}{pid}\shell\open\command|=SZ {Command}"]);
         Assert.Equal(expected.Order(), reg.Values.Select(kv => kv.Key + "=" + (kv.Value is byte[] { Length: 0 } ? "NONE" : "SZ " + kv.Value)).Order());
     }
 
@@ -98,12 +98,12 @@ public class RegistrationTests
     public void Entries_a_hand_picked_older_copy_left_are_pointed_at_the_registered_exe_in_place_once()
     {
         var reg = new FakeRegistry();
-        const string Stray = Classes + @"Applications\MarkdownMidget-v1.0.0-rc1-win-x64-net10.exe", Old = Classes + "Old.MarkdownMidget";
-        reg.Values[Stray + @"\shell\open\command|"] = @"""C:\Users\u\Downloads\MarkdownMidget-v1.0.0-rc1-win-x64-net10.exe"" ""%1""";
-        reg.Values[Stray + @"\DefaultIcon|"] = @"C:\Users\u\Downloads\MarkdownMidget-v1.0.0-rc1-win-x64-net10.exe,0";
-        reg.Values[@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.md\UserChoice|ProgId"] = @"Applications\MarkdownMidget-v1.0.0-rc1-win-x64-net10.exe";
-        reg.Values[Classes + @".md\OpenWithProgids|Old.MarkdownMidget"] = Array.Empty<byte>();   // a ProgID an Open with list names
-        reg.Values[Old + @"\shell\open\command|"] = @"D:\Tools\MarkdownMidget.exe %1";
+        const string Stray = Classes + @"Applications\MMEEEE-v1.0.0-rc1-win-x64-net10.exe", Old = Classes + "Old.MMEEEE";
+        reg.Values[Stray + @"\shell\open\command|"] = @"""C:\Users\u\Downloads\MMEEEE-v1.0.0-rc1-win-x64-net10.exe"" ""%1""";
+        reg.Values[Stray + @"\DefaultIcon|"] = @"C:\Users\u\Downloads\MMEEEE-v1.0.0-rc1-win-x64-net10.exe,0";
+        reg.Values[@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.md\UserChoice|ProgId"] = @"Applications\MMEEEE-v1.0.0-rc1-win-x64-net10.exe";
+        reg.Values[Classes + @".md\OpenWithProgids|Old.MMEEEE"] = Array.Empty<byte>();   // a ProgID an Open with list names
+        reg.Values[Old + @"\shell\open\command|"] = @"D:\Tools\MMEEEE.exe %1";
         reg.Register(Exe);
         Assert.Equal([Command, Icon, Command, null], new[] { reg.Values[Stray + @"\shell\open\command|"], reg.Values[Stray + @"\DefaultIcon|"], reg.Values[Old + @"\shell\open\command|"], reg.Get(Old + @"\DefaultIcon", "") });
         Assert.DoesNotContain(reg.Log, l => l.StartsWith("delete ") || l.Contains("UserChoice"));
@@ -116,7 +116,7 @@ public class RegistrationTests
     {
         var reg = new FakeRegistry();
         reg.Values[Classes + @"Applications\SomeOtherEditor.exe\shell\open\command|"] = @"""C:\Tools\MarkdownMidget\SomeOtherEditor.exe"" ""%1""";
-        reg.Values[Classes + @"Applications\Viewer.exe\shell\open\command|"] = @"""C:\Tools\Viewer.exe"" ""C:\Tools\MarkdownMidget.exe"" ""%1""";
+        reg.Values[Classes + @"Applications\Viewer.exe\shell\open\command|"] = @"""C:\Tools\Viewer.exe"" ""C:\Tools\MMEEEE.exe"" ""%1""";
         reg.Register(Exe);
         Assert.DoesNotContain(reg.Log, l => l.Contains("SomeOtherEditor") || l.Contains("Viewer"));   // the fake changes values only through a logged call
     }

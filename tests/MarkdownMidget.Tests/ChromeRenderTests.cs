@@ -372,7 +372,7 @@ public class ChromeRenderTests
             {
                 Image Picture() => new() { Width = 16, Height = 16, Stretch = Stretch.Fill };
                 var before = Picture();
-                before.Source = BitmapFrame.Create(new Uri($"pack://application:,,,/MarkdownMidget;component/Assets/{file}"));
+                before.Source = BitmapFrame.Create(new Uri($"pack://application:,,,/MMEEEE;component/Assets/{file}"));
                 RenderOptions.SetBitmapScalingMode(before, BitmapScalingMode.HighQuality);
                 var light = Picture();
                 light.SetResourceReference(Image.SourceProperty, key);
@@ -383,7 +383,7 @@ public class ChromeRenderTests
                 Assert.Null(Difference(Draw(Host(before, Aero2)), Draw(Host(light, Light))));
                 // On the dark window the original ink all but vanishes; the dark palette's copy is light.
                 var original = Picture();
-                original.Source = BitmapFrame.Create(new Uri($"pack://application:,,,/MarkdownMidget;component/Assets/{file}"));
+                original.Source = BitmapFrame.Create(new Uri($"pack://application:,,,/MMEEEE;component/Assets/{file}"));
                 Assert.True(Brightest(Draw(Host(original, Dark))) < 0.4, $"{file} was expected to be dark ink");
                 Assert.True(Brightest(Draw(Host(dark, Dark))) > 0.6, $"{key} in dark mode is not light ink");
             }

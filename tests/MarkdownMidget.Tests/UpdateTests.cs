@@ -53,7 +53,7 @@ public class ReleaseFeedTests
     private static string Release(string tag, bool prerelease, bool draft = false, bool withAsset = true)
     {
         var assets = withAsset
-            ? $@"[{{""name"":""MarkdownMidget-{tag}-win-x64-net10.exe"",
+            ? $@"[{{""name"":""MMEEEE-{tag}-win-x64.exe"",
                   ""browser_download_url"":""https://example.com/{tag}.exe"",""size"":100}}]"
             : "[]";
         return $@"{{""tag_name"":""{tag}"",""prerelease"":{prerelease.ToString().ToLower()},
@@ -101,7 +101,7 @@ public class ReleaseFeedTests
     public void Select_CarriesAssetDetails()
     {
         var check = ReleaseFeed.Select(Feed(Release("v0.5.1", prerelease: false)));
-        Assert.Equal("MarkdownMidget-v0.5.1-win-x64-net10.exe", check.Stable?.AssetName);
+        Assert.Equal("MMEEEE-v0.5.1-win-x64.exe", check.Stable?.AssetName);
         Assert.Equal(100, check.Stable?.AssetSize);
         Assert.StartsWith("https://example.com/", check.Stable?.AssetUrl);
     }

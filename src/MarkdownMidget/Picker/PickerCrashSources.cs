@@ -21,7 +21,7 @@ internal static class PickerCrashSources
     /// <summary>Gather every clue; slow enough (registry walk, version resources) to belong off the UI thread.</summary>
     public static PickerCrashFindings Gather(int exitCode, int processId)
     {
-        var exe = Path.GetFileName(Environment.ProcessPath ?? "MarkdownMidget.exe");
+        var exe = Path.GetFileName(Environment.ProcessPath ?? AppIdentity.Name + ".exe");
         var fault = PickerCrashClues.FindFault(RecentApplicationErrors, exe, processId, DateTime.UtcNow, Window);
         if (fault is null)
         {

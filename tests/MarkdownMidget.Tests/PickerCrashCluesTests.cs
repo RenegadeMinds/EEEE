@@ -18,7 +18,7 @@ public class PickerCrashCluesTests
 {
     private static readonly DateTime Now = new(2026, 9, 23, 15, 20, 0, DateTimeKind.Utc);
     private static readonly TimeSpan Window = TimeSpan.FromMinutes(2);
-    private const string Exe = "MarkdownMidget.exe";
+    private const string Exe = "MMEEEE.exe";
 
     /// <summary>An "Application Error" event exactly as Get-WinEvent's ToXml() gave it on
     /// Windows 11 26200 for a real access violation (2026-09-23); only the values vary.</summary>
@@ -75,7 +75,7 @@ public class PickerCrashCluesTests
             Event(Exe, 43, "sibling.dll", @"C:\x\sibling.dll", time: "2026-09-23T15:19:50.0000000Z"),                     // another window's helper
             "<garbage",
         };
-        var fault = PickerCrashClues.PickFault(events, "markdownmidget.EXE", 42, Now, Window);
+        var fault = PickerCrashClues.PickFault(events, "mmeeee.EXE", 42, Now, Window);
         Assert.Equal("DropboxExt64.52.dll", fault!.Module);
     }
 
@@ -148,7 +148,7 @@ public class PickerCrashCluesTests
     // No vendor named: every Windows file names Microsoft, so a vendorless one in System32 isn't Windows'.
     [InlineData("oddhook.dll", @"C:\Windows\System32\oddhook.dll", null, "Unidentified")]
     [InlineData("hook.dll", @"C:\Tools\hook.dll", null, "Unidentified")]
-    [InlineData("MarkdownMidget.exe", @"C:\Users\me\AppData\Local\Programs\MarkdownMidget\MarkdownMidget.exe", "Funcular Labs", "ThisApp")]
+    [InlineData("MMEEEE.exe", @"C:\Users\me\AppData\Local\Programs\MMEEEE\MMEEEE.exe", "Funcular Labs", "ThisApp")]
     // What Windows records for Environment.FailFast (measured 2026-09-23).
     [InlineData("unknown", "unknown", null, "Unnamed")]
     public void TheFaultingFileItselfDecidesWhetherItNamesTheCulprit(string module, string path, string? company, string expected) =>
@@ -176,10 +176,10 @@ public class PickerCrashCluesTests
         Assert.StartsWith("Windows recorded the crash in coreclr.dll, a Microsoft file. That doesn't name the add-on:",
                           Say("coreclr.dll", @"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\10.0.9\coreclr.dll", "Microsoft Corporation"));
         Assert.StartsWith("Windows recorded the crash in thumbcache.dll, part of Windows.", Say("thumbcache.dll_unloaded", "thumbcache.dll", "Microsoft Corporation"));
-        Assert.Equal("Windows recorded the crash in coreclr.dll, but Markdown Midget can't tell whose file that is. " +
+        Assert.Equal("Windows recorded the crash in coreclr.dll, but MMEEEE can't tell whose file that is. " +
                      "If it isn't part of Windows, it may be the add-on.", Say("coreclr.dll", "coreclr.dll", Missing));
-        Assert.StartsWith("Windows recorded the crash in MarkdownMidget.exe, Markdown Midget itself.",
-                          Say("MarkdownMidget.exe", @"C:\x\MarkdownMidget.exe", "Funcular Labs"));
+        Assert.StartsWith("Windows recorded the crash in MMEEEE.exe, MMEEEE itself.",
+                          Say("MMEEEE.exe", @"C:\x\MMEEEE.exe", "Funcular Labs"));
         Assert.StartsWith("Windows recorded the crash in a file it couldn't name (exception 80131623).", Say("unknown", "unknown", null));
         Assert.Contains("doesn't name the add-on", Say("unknown", "unknown", null));
         Assert.StartsWith("Windows has no record of this crash",
@@ -488,7 +488,7 @@ public class PickerCrashCluesTests
     public void OpenTheLogHandsTheLogQuotedToExplorerItself()
     {
         // Nothing is started: the test reads what the button would start.
-        const string log = @"C:\Users\Jo Smith,Jr\AppData\Local\MarkdownMidget\logs\file-dialog-crash-2026-09-25-093700.txt";
+        const string log = @"C:\Users\Jo Smith,Jr\AppData\Local\EEEE\logs\file-dialog-crash-2026-09-25-093700.txt";
         var start = PickerCrashClues.ExplorerStart(@"C:\Windows", log);
         Assert.Equal(@"C:\Windows\explorer.exe", start.FileName);
         Assert.Equal("\"" + log + "\"", start.Arguments);

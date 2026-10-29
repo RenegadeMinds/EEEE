@@ -170,7 +170,7 @@ public class InstallGuardTests : IDisposable
     public void InstallingABuildOutputThrowsTheRefusalAndCreatesNothing()
     {
         var source = BuildOutput();
-        var installDir = Path.Combine(_dir, "Programs", "MarkdownMidget");   // not there yet
+        var installDir = Path.Combine(_dir, "Programs", "MMEEEE");   // not there yet
 
         var ex = Assert.Throws<InvalidOperationException>(
             () => RegistrationService.InstallToAppData(source, installDir, File.Exists));
@@ -185,7 +185,7 @@ public class InstallGuardTests : IDisposable
         // A working install from a release must survive a developer's click.
         var source = BuildOutput();
         var installDir = MakeDir("install");
-        var installed = WriteFile(installDir, "MarkdownMidget.exe", "the release that works");
+        var installed = WriteFile(installDir, "MMEEEE.exe", "the release that works");
 
         Assert.Throws<InvalidOperationException>(
             () => RegistrationService.InstallToAppData(source, installDir, File.Exists));
@@ -201,11 +201,11 @@ public class InstallGuardTests : IDisposable
         // nothing beside it.
         var downloads = MakeDir("Downloads");
         var source = WriteFile(downloads, "MarkdownMidget-v0.10.0-win-x64-net10.exe", "single-file bundle");
-        var installDir = Path.Combine(_dir, "Programs", "MarkdownMidget");   // the copy creates it
+        var installDir = Path.Combine(_dir, "Programs", "MMEEEE");   // the copy creates it
 
         var installed = RegistrationService.InstallToAppData(source, installDir, File.Exists);
 
-        Assert.Equal(Path.Combine(installDir, "MarkdownMidget.exe"), installed);
+        Assert.Equal(Path.Combine(installDir, "MMEEEE.exe"), installed);
         Assert.Equal("single-file bundle", File.ReadAllText(installed));
         Assert.Equal(new[] { installed }, Directory.GetFiles(installDir));
         Assert.True(File.Exists(source));   // a copy; removing the download is the Move hand-off's business
@@ -217,7 +217,7 @@ public class InstallGuardTests : IDisposable
         // No copy happens, so there is nothing to refuse: the installed exe is
         // registered in place, and whatever sits beside it stays beside it.
         var installDir = MakeDir("install");
-        var installed = WriteFile(installDir, "MarkdownMidget.exe", "running");
+        var installed = WriteFile(installDir, "MMEEEE.exe", "running");
         WriteFile(installDir, RegistrationService.AppAssemblyName + ".dll", "beside it");
 
         Assert.Equal(installed, RegistrationService.InstallToAppData(installed, installDir, File.Exists));
@@ -256,7 +256,7 @@ public class InstallGuardTests : IDisposable
             "(through dotnet.exe, say), this test cannot see the refusal and needs another build output to run; " +
             "if the exe above IS in the test output folder, CurrentExeNeedsFilesBesideIt is broken, and so is " +
             "Register's check before its dialog.");
-        var installDir = Path.Combine(_dir, "Programs", "MarkdownMidget");
+        var installDir = Path.Combine(_dir, "Programs", "MMEEEE");
         Assert.False(Directory.Exists(installDir));
 
         var ex = Assert.Throws<InvalidOperationException>(() => RegistrationService.InstallToAppData(installDir));

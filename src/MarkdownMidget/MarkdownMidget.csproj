@@ -8,17 +8,22 @@
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\midget.ico</ApplicationIcon>
-    <AssemblyName>MarkdownMidget</AssemblyName>
+    <!-- MMEEEE: the Epics & Epochs Encyclopedia Editor, a fork of Markdown Midget.
+         Its own exe name (and AppIdentity.cs) keep it from colliding with an
+         installed Markdown Midget. The project, folder and namespace keep the
+         upstream name so upstream changes still merge. -->
+    <AssemblyName>MMEEEE</AssemblyName>
     <RootNamespace>MarkdownMidget</RootNamespace>
-    <AssemblyTitle>Markdown Midget</AssemblyTitle>
-    <Product>Markdown Midget</Product>
-    <Company>Funcular Labs</Company>
-    <Authors>Funcular Labs</Authors>
-    <Copyright>Copyright © Funcular Labs 2026. Licensed under the MIT License.</Copyright>
-    <Description>A WYSIWYG markdown editor for Windows, modeled on WordPad's behaviors but with markdown as the native format.</Description>
-    <!-- What a local build reports; CI derives both from the git tag at release time. -->
-    <Version>1.0.3</Version>
-    <InformationalVersion>1.0.3</InformationalVersion>
+    <AssemblyTitle>MMEEEE</AssemblyTitle>
+    <Product>MMEEEE - Epics and Epochs Encyclopedia Editor</Product>
+    <Company>RenegadeMinds</Company>
+    <Authors>RenegadeMinds; Funcular Labs</Authors>
+    <Copyright>Based on Markdown Midget, copyright © Funcular Labs 2026. Licensed under the MIT License.</Copyright>
+    <Description>Markdown editor for the Epics &amp; Epochs rulebooks: tabs, a project explorer and Word / ODT / HTML / PDF builds, on top of Markdown Midget.</Description>
+    <!-- What a local build reports; CI derives both from the git tag at release time.
+         1.1.0 = this fork's first version, built on Markdown Midget 1.0.3. -->
+    <Version>1.1.0</Version>
+    <InformationalVersion>1.1.0</InformationalVersion>
     <!-- Don't append the +git-sha suffix to InformationalVersion — it clutters the
          file-properties dialog and doesn't help users. -->
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -91,6 +96,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Themes\sample.css">
       <LogicalName>themes-sample.css</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- MMEEEE: scripts the app hands to other programs (Tabs\AppScripts.cs writes them
+       out to %LOCALAPPDATA%\EEEE\scripts when used). Tabs\scripts\converter is the
+       Word -> Markdown converter: kept with the source, not part of the app. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Tabs\scripts\html_bits.lua">
+      <LogicalName>scripts/html_bits.lua</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 

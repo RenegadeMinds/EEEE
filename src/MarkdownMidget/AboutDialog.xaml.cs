@@ -159,7 +159,7 @@ public partial class AboutDialog : Window
                   "or close and reopen the window."
                 : "Close and reopen the window to pick it up.";
             MessageBox.Show(this,
-                $"Markdown Midget on this machine is already at {onDisk} — most likely " +
+                $"MMEEEE on this machine is already at {onDisk} — most likely " +
                 "updated by another window.\n\nThis window is still running the older " +
                 $"version. {howToSwitch}",
                 "Restart to finish updating", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -171,6 +171,25 @@ public partial class AboutDialog : Window
             return;
         }
 
+        // MMEEEE: its releases aren't code-signed, so a download can't pass
+        // UpdateService.VerifySignature (which wants Markdown Midget's signature) and
+        // nothing unverified is ever run. The update is a download from the release
+        // page instead. Sign the releases and update VerifySignature to switch back.
+        if (!UpdateService.SignedReleases)
+        {
+            var url = string.IsNullOrEmpty(release.HtmlUrl) ? AppIdentity.RepositoryUrl + "/releases" : release.HtmlUrl;
+            if (MessageBox.Show(this,
+                    $"{release.Tag} is {(prerelease ? "a prerelease" : "the newest release")}.\n\n" +
+                    "Open its download page? Download MMEEEE-" + release.Tag + "-win-x64.exe, close MMEEEE, " +
+                    "and put the new exe in place of this one.",
+                    "MMEEEE update", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); }
+                catch (Exception ex) { Fail("Couldn't open the browser: " + ex.Message); }
+            }
+            return;
+        }
+
         var what = prerelease
             ? $"{release.Tag} is a PRERELEASE — early access, may contain rough edges."
             : $"{release.Tag} is the newest stable release.";
@@ -178,7 +197,7 @@ public partial class AboutDialog : Window
             ? "The installed copy will be replaced, shortcuts refreshed, and the app restarted."
             : "The new version will be downloaded next to the current one and started; the current exe stays behind.";
         if (MessageBox.Show(this, $"{what}\n\n{how}\n\nUpdate now?",
-                "Markdown Midget update", MessageBoxButton.YesNo,
+                "MMEEEE update", MessageBoxButton.YesNo,
                 prerelease ? MessageBoxImage.Warning : MessageBoxImage.Question) != MessageBoxResult.Yes)
             return;
 
@@ -203,7 +222,7 @@ public partial class AboutDialog : Window
             }
             else
             {
-                _restart(() => UpdateService.ApplyPortableAndRestart(file, release.AssetName ?? "MarkdownMidget.exe", _relaunchArgs));
+                _restart(() => UpdateService.ApplyPortableAndRestart(file, release.AssetName ?? AppIdentity.Name + ".exe", _relaunchArgs));
             }
             Application.Current.Shutdown();
         }

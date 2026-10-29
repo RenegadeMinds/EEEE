@@ -29,8 +29,8 @@ public class DefaultAppTests
         => Assert.Equal(expected, DefaultApp.Step(offer, help, closing, recovering, unsaved).ToString());
 
     [Theory]
-    [InlineData(true, "Windows no longer opens .md files with Markdown Midget.")]   // the last run recorded that it did
-    [InlineData(null, "Windows doesn't open .md files with Markdown Midget.")]      // no record (rc1): a reset and a choice of another app look alike
+    [InlineData(true, "Windows no longer opens .md files with MMEEEE.")]   // the last run recorded that it did
+    [InlineData(null, "Windows doesn't open .md files with MMEEEE.")]      // no record (rc1): a reset and a choice of another app look alike
     public void The_notice_says_no_longer_only_when_the_last_run_recorded_that_md_opened_with_us(bool? before, string text)
         => Assert.Equal(text, DefaultApp.NoticeText(before));
 
@@ -65,7 +65,7 @@ public class DefaultAppTests
     public void Settings_opens_on_the_app_Register_lists_from_Windows_11_22H2_and_on_Default_apps_before(int build, bool ownPage)
     {
         var reg = new Recorder();
-        RegistrationService.Register(@"C:\Users\u\AppData\Local\Programs\MarkdownMidget\MarkdownMidget.exe", reg, () => { });
+        RegistrationService.Register(@"C:\Users\u\AppData\Local\Programs\MMEEEE\MMEEEE.exe", reg, () => { });
         var name = Assert.Single(reg.Written, w => w.Key == @"Software\RegisteredApplications").Name;
         Assert.Equal(ownPage ? "ms-settings:defaultapps?registeredAppUser=" + Uri.EscapeDataString(name) : "ms-settings:defaultapps", DefaultApp.SettingsUri(build));
     }
@@ -82,7 +82,7 @@ public class DefaultAppTests
     }
 
     [Theory]   // Register, with Make it my default ticked, calls OpenSettings once registered, as the button does; the wiring is INST-03's
-    [InlineData(22621, "Markdown Midget's page")]
+    [InlineData(22621, "MMEEEE's page")]
     [InlineData(19045, "Default apps")]   // Windows 10 22H2: no page for one app
     public void Register_with_make_default_launches_the_buttons_page_for_the_build_and_says_which_page(int build, string page)
     {
@@ -101,7 +101,7 @@ public class DefaultAppTests
     {
         List<string> seen = [];
         DefaultApp.AfterMove(makeDefault, true, build, seen.Add, seen.Add);
-        string[] expected = makeDefault ? ["Registered Markdown Midget as an editor for .md files.\n\n" + DefaultApp.RegisterNote(build), DefaultApp.SettingsUri(build)] : [];
+        string[] expected = makeDefault ? ["Registered MMEEEE as an editor for .md files.\n\n" + DefaultApp.RegisterNote(build), DefaultApp.SettingsUri(build)] : [];
         Assert.Equal(expected, seen);
     }
 
@@ -113,11 +113,11 @@ public class DefaultAppTests
     }
 
     [Theory]
-    [InlineData(@"c:\users\u\appdata\local\programs\markdownmidget\markdownmidget.exe", true)]
-    [InlineData(@"C:\Users\u\AppData\Local\Programs\MarkdownMidget\.\MarkdownMidget.exe", true)]
-    [InlineData(@"C:\Users\u\Downloads\MarkdownMidget.exe", false)]
+    [InlineData(@"c:\users\u\appdata\local\programs\mmeeee\mmeeee.exe", true)]
+    [InlineData(@"C:\Users\u\AppData\Local\Programs\MMEEEE\.\MMEEEE.exe", true)]
+    [InlineData(@"C:\Users\u\Downloads\MMEEEE.exe", false)]
     [InlineData(@"C:\WINDOWS\system32\OpenWith.exe", false)]
     [InlineData(null, false)]
     public void Opens_with_us_compares_full_paths_in_any_case(string? resolved, bool expected)
-        => Assert.Equal(expected, DefaultApp.IsSameExe(resolved, @"C:\Users\u\AppData\Local\Programs\MarkdownMidget\MarkdownMidget.exe"));
+        => Assert.Equal(expected, DefaultApp.IsSameExe(resolved, @"C:\Users\u\AppData\Local\Programs\MMEEEE\MMEEEE.exe"));
 }

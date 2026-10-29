@@ -16,23 +16,23 @@ internal static class RegistrationService
 {
     // Stable ProgID: re-registering overwrites the same key, so we can't
     // accidentally create duplicate "MarkdownMidget" entries in Open With.
-    private const string ProgId = "MarkdownMidget.Document";
-    private const string SecureProgId = "MarkdownMidget.SecureDocument";
-    internal const string DisplayName = "Markdown Midget";   // also the value name under RegisteredApplications (Settings' registeredAppUser)
+    private const string ProgId = AppIdentity.Name + ".Document";
+    private const string SecureProgId = AppIdentity.Name + ".SecureDocument";
+    internal const string DisplayName = AppIdentity.Name;   // also the value name under RegisteredApplications (Settings' registeredAppUser)
     private const string DocTypeName = "Markdown Document";
-    private const string SecureDocTypeName = "Markdown Midget Encrypted Document";
-    private const string ExeCanonicalName = "MarkdownMidget.exe";
-    private const string ShortcutLinkName = "Markdown Midget.lnk";
+    private const string SecureDocTypeName = "MMEEEE Encrypted Document";
+    private const string ExeCanonicalName = AppIdentity.Name + ".exe";
+    private const string ShortcutLinkName = "MMEEEE.lnk";
     private const string InstallInfoName = "install-info.json";
     // Where the Windows "Default apps" page learns we exist — see Register().
-    private const string CapabilitiesKeyPath = @"Software\Funcular Labs\Markdown Midget\Capabilities";
+    private const string CapabilitiesKeyPath = @"Software\RenegadeMinds\" + AppIdentity.Name + @"\Capabilities";
 
     public static string CurrentExePath =>
         Environment.ProcessPath ?? throw new InvalidOperationException("Cannot determine current exe path.");
 
     public static string AppDataInstallDir => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "Programs", "MarkdownMidget");
+        "Programs", AppIdentity.Name);
 
     public static string AppDataInstallExe => Path.Combine(AppDataInstallDir, ExeCanonicalName);
 
@@ -206,7 +206,7 @@ internal static class RegistrationService
     {
         var c = command?.TrimStart() ?? string.Empty;
         var exe = c.StartsWith('"') ? c[1..].Split('"')[0] : c.Split(' ')[0];
-        return System.IO.Enumeration.FileSystemName.MatchesSimpleExpression("MarkdownMidget*.exe", Path.GetFileName(exe));
+        return System.IO.Enumeration.FileSystemName.MatchesSimpleExpression(AppIdentity.Name + "*.exe",Path.GetFileName(exe));
     }
 
     /// <summary>Remove all registration and dedupe strays. Safe to call twice. Explicit uninstall only.</summary>
@@ -223,7 +223,7 @@ internal static class RegistrationService
         reg.DeleteTree(@"Software\Classes\" + ProgId);
         reg.DeleteTree(@"Software\Classes\Applications\" + ExeCanonicalName);
         reg.DeleteValue(@"Software\RegisteredApplications", DisplayName);   // the Default-apps listing
-        reg.DeleteTree(@"Software\Funcular Labs\Markdown Midget");
+        reg.DeleteTree(@"Software\RenegadeMinds\" + AppIdentity.Name);
         reg.DeleteTree(@"Software\Classes\" + SecureProgId);
         try { if (reg.Get(@"Software\Classes\.mdenc", string.Empty) as string == SecureProgId) reg.Set(@"Software\Classes\.mdenc", string.Empty, string.Empty); }
         catch { }
@@ -299,8 +299,7 @@ internal static class RegistrationService
                             continue;
                         }
                         if (LooksLikeUs(name)
-                            || name.StartsWith(@"Applications\MarkdownMidget", StringComparison.OrdinalIgnoreCase)
-                            || name.StartsWith(@"Applications\mkm", StringComparison.OrdinalIgnoreCase))
+                            || name.StartsWith(@"Applications\" + AppIdentity.Name, StringComparison.OrdinalIgnoreCase))
                         {
                             try { mruPids.DeleteValue(name); } catch { }
                         }
@@ -319,8 +318,7 @@ internal static class RegistrationService
                 if (uc is not null)
                 {
                     var pid = uc.GetValue("ProgId") as string ?? string.Empty;
-                    if (pid.StartsWith(@"Applications\MarkdownMidget", StringComparison.OrdinalIgnoreCase)
-                        || pid.StartsWith(@"Applications\mkm", StringComparison.OrdinalIgnoreCase)
+                    if (pid.StartsWith(@"Applications\" + AppIdentity.Name, StringComparison.OrdinalIgnoreCase)
                         || (LooksLikeUs(pid) && !string.Equals(pid, ProgId, StringComparison.OrdinalIgnoreCase)
                                           && !string.Equals(pid, SecureProgId, StringComparison.OrdinalIgnoreCase))
                         // On UNregister the current ProgID is about to be deleted, so a
@@ -354,8 +352,8 @@ internal static class RegistrationService
                     using var sub = appsRoot.OpenSubKey(name);
                     var friendly = sub?.GetValue("FriendlyAppName") as string;
                     var cmd = sub?.OpenSubKey(@"shell\open\command")?.GetValue(string.Empty) as string;
-                    if ((friendly is not null && friendly.Contains("Markdown Midget", StringComparison.OrdinalIgnoreCase))
-                        || (cmd is not null && cmd.Contains("MarkdownMidget", StringComparison.OrdinalIgnoreCase)))
+                    if ((friendly is not null && friendly.Contains(AppIdentity.Name, StringComparison.OrdinalIgnoreCase))
+                        || (cmd is not null && cmd.Contains(AppIdentity.Name, StringComparison.OrdinalIgnoreCase)))
                     {
                         try { appsRoot.DeleteSubKeyTree(name, throwOnMissingSubKey: false); } catch { }
                     }
@@ -366,9 +364,8 @@ internal static class RegistrationService
     }
 
     private static bool LooksLikeUs(string s) =>
-        s.Contains("MarkdownMidget", StringComparison.OrdinalIgnoreCase)
-        || s.Contains("mkm.exe", StringComparison.OrdinalIgnoreCase)
-        || s.Contains("mkm.lnk", StringComparison.OrdinalIgnoreCase);
+        // Only this fork's own entries: never an installed Markdown Midget's.
+        s.Contains(AppIdentity.Name, StringComparison.OrdinalIgnoreCase);
 
     // ===== AppData install + Start Menu =====
 
@@ -513,7 +510,7 @@ internal static class RegistrationService
             link.TargetPath = targetExe;
             link.WorkingDirectory = Path.GetDirectoryName(targetExe) ?? string.Empty;
             link.IconLocation = targetExe + ",0";
-            link.Description = "Markdown Midget — a WordPad-style, markdown-native WYSIWYG editor.";
+            link.Description = "MMEEEE — a WordPad-style, markdown-native WYSIWYG editor.";
             link.Save();
         }
         catch { /* best-effort — shortcuts are a bonus, not critical */ }

@@ -5,7 +5,7 @@
         xmlns:src="clr-namespace:MarkdownMidget.Source"
         xmlns:local="clr-namespace:MarkdownMidget"
         xmlns:chrome="clr-namespace:MarkdownMidget.Chrome"
-        Title="Markdown Midget" Height="720" Width="1120" MinHeight="360" MinWidth="520"
+        Title="MMEEEE" Height="720" Width="1120" MinHeight="360" MinWidth="520"
         Icon="/Assets/midget-256.png"
         WindowStartupLocation="CenterScreen"
         AllowDrop="True" DragOver="Window_DragOver" Drop="Window_Drop">
@@ -153,7 +153,7 @@
                         <MenuItem Header="_Windows Integration">
                             <MenuItem Header="_Register as .md editor…" Click="RegisterMdEditor_Click" />
                             <MenuItem x:Name="UnregisterMenu" Header="_Unregister as .md editor" Click="UnregisterMdEditor_Click" />
-                            <MenuItem Header="_Make Markdown Midget the default…" Click="MakeDefault_Click" />
+                            <MenuItem Header="_Make MMEEEE the default…" Click="MakeDefault_Click" />
                         </MenuItem>
                         <Separator />
                         <MenuItem Header="E_xit" Click="Exit_Click" />
@@ -276,7 +276,7 @@
                              Visibility is decided in HelpMenu_Opened. -->
                         <MenuItem x:Name="MenuApplyUpdate" Visibility="Collapsed" Click="ApplyUpdate_Click" />
                         <Separator />
-                        <MenuItem Header="_About Markdown Midget" Click="About_Click" />
+                        <MenuItem Header="_About MMEEEE" Click="About_Click" />
                     </MenuItem>
                 </Menu>
 

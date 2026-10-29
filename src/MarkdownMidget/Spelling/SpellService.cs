@@ -37,7 +37,7 @@ internal sealed class SpellService
 
     private static string DefaultDictionaryPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "MarkdownMidget", "dictionary.txt");
+        AppIdentity.DataFolderName, "dictionary.txt");
 
     public SpellService() : this(DefaultDictionaryPath) { }
 

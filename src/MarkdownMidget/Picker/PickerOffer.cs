@@ -26,7 +26,7 @@ internal static class PickerOffer
 {
     public const string Crash = "crash", User = "user";
 
-    public const string Question = "Markdown Midget is using its own file picker. An older version could switch to it " +
+    public const string Question = "MMEEEE is using its own file picker. An older version could switch to it " +
         "by mistake when you pressed Cancel. Try Windows' dialog again?";
 
     public static string AppVersion =>
@@ -58,6 +58,6 @@ internal static class PickerOffer
 
     /// <summary>The crash log's line for the switch the crash made.</summary>
     public static string LogLine(PickerSwitch s) =>
-        $"The built-in file picker was switched on: reason {s.Reason}, by Markdown Midget {s.Version}, " +
+        $"The built-in file picker was switched on: reason {s.Reason}, by MMEEEE {s.Version}, " +
         $"at {s.Utc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)} UTC";
 }

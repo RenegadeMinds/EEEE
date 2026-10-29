@@ -70,78 +70,39 @@ jobs:
       - name: Test
         run: dotnet test tests/MarkdownMidget.Tests/MarkdownMidget.Tests.csproj -c Release --verbosity minimal
 
-      - name: Publish framework-dependent
+      # MMEEEE: a self-contained single-file exe (no .NET to install), plus a zip of
+      # it with the user README and the license. The app's updater looks for the
+      # asset ending "-win-x64.exe" (Updates/ReleaseFeed.cs). Unsigned: Markdown
+      # Midget's Azure signing belongs to Funcular Labs.
+      - name: Publish self-contained
         shell: pwsh
         run: |
           dotnet publish src/MarkdownMidget/MarkdownMidget.csproj `
-            -p:PublishProfile=win-x64-fxdependent `
+            -p:PublishProfile=win-x64 `
             -p:Version=${{ steps.tag.outputs.base }} `
             -p:InformationalVersion=${{ steps.tag.outputs.version }} `
             --nologo
 
-      - name: Stage asset
+      - name: Stage assets
         id: stage
         shell: pwsh
         run: |
-          $src = "src/MarkdownMidget/bin/Release/publish/framework-dependent/MarkdownMidget.exe"
+          $src = "src/MarkdownMidget/bin/Release/publish/self-contained/MMEEEE.exe"
           if (-not (Test-Path $src)) { throw "Published exe not found at $src" }
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          $dest = "dist/MarkdownMidget-${{ steps.tag.outputs.tag }}-win-x64-net10.exe"
-          Copy-Item $src $dest -Force
-          $size = (Get-Item $dest).Length
-          "asset=$dest" >> $env:GITHUB_OUTPUT
-          "sizeMB=$([Math]::Round($size / 1MB, 2))" >> $env:GITHUB_OUTPUT
-
-      # ===== Authenticode signing via Azure Artifact Signing =====
-      # Uses the SP whose credentials are in AZURE_CLIENT_ID/TENANT/SECRET secrets.
-      # azuretrustedsigntool wraps signtool.exe + the CodeSigning dlib; it picks
-      # up creds via DefaultAzureCredential (which reads the AZURE_* env vars).
-
-      - name: Install azuretrustedsigntool
-        run: dotnet tool install --global azuretrustedsigntool
-
-      - name: Locate signtool.exe (Windows SDK, preinstalled on windows-latest)
-        id: signtool
-        shell: pwsh
-        run: |
-          $tool = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" `
-                    -Recurse -Filter signtool.exe -ErrorAction SilentlyContinue |
-                  Where-Object { $_.FullName -like "*\x64\*" } |
-                  Sort-Object FullName -Descending |
-                  Select-Object -First 1
-          if (-not $tool) { throw "signtool.exe not found on runner" }
-          Write-Host "signtool: $($tool.FullName)"
-          "path=$($tool.FullName)" >> $env:GITHUB_OUTPUT
-
-      - name: Sign the exe (Azure Artifact Signing)
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        shell: pwsh
-        run: |
-          # NB: --signtoolexe long form: the tool has a bug where `-e` is
-          # registered twice (both --signtoolexe and --excludefilelist), so any
-          # short-form `-e` triggers "Sequence contains more than one matching
-          # element" in the CommandLine parser. Long form is unambiguous.
-          azuretrustedsigntool sign `
-            --file "${{ steps.stage.outputs.asset }}" `
-            --accountname func-az-artifact-signing `
-            --profilename funcular-labs-public-trust `
-            --trustedendpoint https://cus.codesigning.azure.net/ `
-            --signtoolexe "${{ steps.signtool.outputs.path }}" `
-            --description "Markdown Midget" `
-            --verbose
-
-      - name: Verify Authenticode signature
-        shell: pwsh
-        run: |
-          & "${{ steps.signtool.outputs.path }}" verify /pa /v "${{ steps.stage.outputs.asset }}"
-          if ($LASTEXITCODE -ne 0) { throw "Authenticode verify failed (exit $LASTEXITCODE)" }
-          $sig = Get-AuthenticodeSignature "${{ steps.stage.outputs.asset }}"
-          Write-Host "Status:  $($sig.Status)"
-          Write-Host "Subject: $($sig.SignerCertificate.Subject)"
-          if ($sig.Status -ne 'Valid') { throw "Signature status is $($sig.Status), expected Valid" }
+          $tag = "${{ steps.tag.outputs.tag }}"
+          $exe = "dist/MMEEEE-$tag-win-x64.exe"
+          Copy-Item $src $exe -Force
+          $stage = "dist/MMEEEE-$tag"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item $src "$stage/MMEEEE.exe"
+          Copy-Item src/MarkdownMidget/Tabs/RELEASE-README.md "$stage/README.md"
+          Copy-Item LICENSE "$stage/LICENSE"
+          $zip = "dist/MMEEEE-$tag-win-x64.zip"
+          Compress-Archive -Path "$stage/*" -DestinationPath $zip -Force
+          "exe=$exe" >> $env:GITHUB_OUTPUT
+          "zip=$zip" >> $env:GITHUB_OUTPUT
+          "sizeMB=$([Math]::Round((Get-Item $exe).Length / 1MB, 1))" >> $env:GITHUB_OUTPUT
 
       - name: Build release notes from CHANGELOG
         id: notes
@@ -150,6 +111,7 @@ jobs:
           $version = "${{ steps.tag.outputs.version }}"
           $tag = "${{ steps.tag.outputs.tag }}"
           $sizeMB = "${{ steps.stage.outputs.sizeMB }}"
+          $repo = "${{ github.repository }}"
 
           $lines = Get-Content CHANGELOG.md
           $start = -1
@@ -165,46 +127,45 @@ jobs:
           }
           if ($start -lt 0) {
             Write-Warning "No CHANGELOG entry for [$version]; using generic notes."
-            $body = "Alpha update. See [CHANGELOG.md](https://github.com/FuncularLabs/MarkdownMidget/blob/master/CHANGELOG.md) for full history."
+            $body = "See [CHANGELOG.md](https://github.com/$repo/blob/master/CHANGELOG.md) for what changed."
           } else {
             $body = ($lines[$start..($end-1)] -join "`n").TrimEnd()
-            $body += "`n`nSee [CHANGELOG.md](https://github.com/FuncularLabs/MarkdownMidget/blob/master/CHANGELOG.md) for full history."
+            $body += "`n`nSee [CHANGELOG.md](https://github.com/$repo/blob/master/CHANGELOG.md) for full history."
           }
 
           $boilerplate = @(
             ''
             '## Download'
             ''
-            "**``MarkdownMidget-$tag-win-x64-net10.exe``** — single-file, framework-dependent build (~$sizeMB MB)."
+            "- **``MMEEEE-$tag-win-x64.zip``**: the app, a README and the license."
+            "- **``MMEEEE-$tag-win-x64.exe``**: just the app (~$sizeMB MB). It's the whole thing: no installer, no .NET to install."
             ''
             '## Requirements'
             ''
             '- **Windows 10/11 (x64)**'
-            '- **.NET 10 Desktop Runtime** — https://dotnet.microsoft.com/download/dotnet/10.0'
-            '- **Microsoft Edge WebView2 Runtime** — preinstalled on Windows 11; otherwise a free download from Microsoft.'
+            '- **Microsoft Edge WebView2 Runtime**: already on Windows 11; otherwise a free download from Microsoft.'
+            '- **Pandoc** (free), to build books: https://pandoc.org/installing.html or `winget install JohnMacFarlane.Pandoc`'
+            '- **Microsoft Word** (optional): fills in a Word build''s contents page and makes PDFs.'
             ''
             '## Notes'
             ''
-            '- The download is **signed** by Funcular Labs via Azure Artifact Signing (Authenticode). If Windows SmartScreen warns on a very new release, the reputation graph builds up quickly for signed installers.'
-            '- Settings/recent files live under `%LocalAppData%\MarkdownMidget`.'
+            '- The exe is not code-signed, so Windows SmartScreen may warn the first time: **More info ▸ Run anyway**.'
+            '- Settings live in `%LocalAppData%\EEEE`.'
           ) -join "`n"
 
           $full = $body + "`n" + $boilerplate
           Set-Content -Path release-notes.md -Value $full -Encoding utf8
-          "Extracted notes (first 500 chars):"
-          $full.Substring(0, [Math]::Min(500, $full.Length))
 
       - name: Create GitHub Release
-        # Pinned to a commit, not a floating major. This one is third-party, holds a
-        # contents:write token, and is what publishes our signed binaries — silently
-        # adopting a future 3.x is not something to discover at tag time. The
-        # actions/* steps above are first-party and stay on floating majors.
-        # Bump deliberately; this sha is what @v3 pointed at when it was pinned.
+        # Pinned to a commit, not a floating major: it holds a contents:write token
+        # and publishes the binaries.
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
-          name: Markdown Midget ${{ steps.tag.outputs.tag }}
+          name: MMEEEE ${{ steps.tag.outputs.tag }}
           body_path: release-notes.md
           prerelease: ${{ steps.tag.outputs.prerelease == 'true' }}
-          files: ${{ steps.stage.outputs.asset }}
+          files: |
+            ${{ steps.stage.outputs.zip }}
+            ${{ steps.stage.outputs.exe }}
           fail_on_unmatched_files: true

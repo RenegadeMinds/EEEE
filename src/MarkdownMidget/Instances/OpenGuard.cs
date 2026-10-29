@@ -84,7 +84,7 @@ internal sealed class OpenGuard : IDisposable
 
     public static string DefaultDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "MarkdownMidget", "open");
+        AppIdentity.DataFolderName, "open");
 
     /// <summary>The document this guard currently holds a claim on, as given to
     /// Acquire/Rekey; null when it holds nothing.</summary>

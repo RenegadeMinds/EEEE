@@ -44,7 +44,7 @@ public partial class PickerCrashDialog : Window
             }
             dialog.Fill(findings, crashed);
             // Once the clues are up, and off the UI thread: a slow or failing disk never holds them back.
-            var logs = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MarkdownMidget", "logs");
+            var logs = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentity.DataFolderName, "logs");
             var details = dialog._details!;
             var (path, note) = await Task.Run(() => PickerCrashClues.SaveLog(logs, details, crashed));
             dialog.ShowLog(path, note, findings);
@@ -106,10 +106,10 @@ public partial class PickerCrashDialog : Window
     {
         try
         {
-            var dataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MarkdownMidget");
+            var dataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentity.DataFolderName);
             var path = PickerCrashClues.ExtractGuide(
                 () => typeof(PickerCrashDialog).Assembly.GetManifestResourceStream(PickerCrashClues.GuideResource), dataDir);
-            if (path is null) { Status("The guide is missing from this copy of Markdown Midget."); return; }
+            if (path is null) { Status("The guide is missing from this copy of MMEEEE."); return; }
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true })?.Dispose();
         }
         catch (Exception ex) { Status("Couldn't open the guide: " + ex.Message); }

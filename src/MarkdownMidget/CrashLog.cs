@@ -18,7 +18,7 @@ internal static class CrashLog
 {
     public static string LogPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "MarkdownMidget", "crash.log");
+        AppIdentity.DataFolderName, "crash.log");
 
     // Keep the file bounded: a crash loop must not eat the disk. When it grows past
     // this, the oldest half is dropped — recent crashes are the ones being asked about.

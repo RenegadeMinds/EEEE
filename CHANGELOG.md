@@ -1,6 +1,8 @@
 # Changelog
 
-All notable changes to **Markdown Midget** are recorded here.
+All notable changes to **MMEEEE** (the Epics & Epochs Encyclopedia Editor) are
+recorded here. MMEEEE is a fork of **Markdown Midget** by Funcular Labs: entries from
+1.0.3 down are Markdown Midget's own history, kept as it was.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/). A version
@@ -8,6 +10,44 @@ with a suffix, such as `-beta1` or `-rc1`, is a prerelease: it is published for
 testing before the stable release of the same number.
 
 ## [Unreleased]
+
+## [1.1.0] - 2026-10-29
+
+The first MMEEEE release: Markdown Midget 1.0.3 with a tabbed window built for
+writing and building the Epics & Epochs rulebooks.
+
+### Added
+
+- **Tabs.** The app opens in a tabbed window: one tab per document, each keeping its
+  place and undo history. Right-click a tab for **Close**, **Close Others**,
+  **Close to the Right**, **Close All**, **Build**, **Copy Path** and **Show in Explorer**.
+  The classic one-document window is still there: start with `--notabs`.
+- **Files pane.** A folder's Markdown files, sorted the way Explorer sorts them
+  (`ogre-mage.md` before `ogre-mage-ogre-mages-as-characters.md`). One click opens a file.
+- **Project pane.** Open a book folder (one with a `000000-index.md`) and see it in
+  book order, each entry named by its heading.
+- **Right-click a folder** (either pane): **Concatenate into New File…**,
+  **Open All ▸ …in this folder / …and all subfolders** (with file counts),
+  **New Entry…**, **Build**, **Open in Explorer**, **Copy Full Path**.
+- **Right-click a file:** **Open**, **New Entry…**, **Build**, **Show in Explorer**,
+  **Copy Full Path**, **Copy Markdown Link** (relative to the document you're in).
+- **New Entry…** makes a new file after the one you clicked, numbered halfway to the
+  next (001500 and 002000 give 001750), and adds it to the folder's index.
+- **Build** a book, a folder or one file as Open Document (ODT), Web page (HTML),
+  Word (DOCX) or PDF, with a contents page. The toolbar's **Build ▾** builds the whole
+  project into a `_build` folder beside it; **Build ▾ ▸ Contents depth** sets how many
+  heading levels the contents page lists, per project. Building needs Pandoc; Word
+  fills in the DOCX contents and makes PDFs. The Build menus say what's missing and
+  how to get it.
+- **Check Links** checks every link in the project and lists the broken ones;
+  double-click one to open its file.
+
+### Changed
+
+- The app is **MMEEEE** (`MMEEEE.exe`) with its own settings folder
+  (`%LocalAppData%\EEEE`), its own Windows "Open with" entry and its own updates
+  (from [RenegadeMinds/EEEE](https://github.com/RenegadeMinds/EEEE/releases)), so it
+  can sit beside an installed Markdown Midget without either touching the other.
 
 ## [1.0.3] - 2026-10-14
 

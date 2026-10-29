@@ -1,3 +1,69 @@
+# MMEEEE — Epics & Epochs Encyclopedia Editor
+
+A fork of [Markdown Midget](https://github.com/FuncularLabs/MarkdownMidget) for writing
+the Epics & Epochs rulebooks. It adds:
+
+- **Tabs**: many documents in one window, each keeping its place and undo history.
+- A **Files** pane (Explorer order) and a **Project** pane that shows a book folder in
+  reading order, from its `000000-index.md` files.
+- **Right-click menus** on tabs, files and folders: Open All, Concatenate, New Entry
+  (numbered to fit between two entries), Copy Markdown Link, Show in Explorer …
+- **Build** a book, folder or file as Word (DOCX), Open Document (ODT), web page (HTML)
+  or PDF, with a contents page whose depth you choose per project.
+- **Check Links**: every link in a book, with the broken ones a double-click away.
+
+It is its own app — `MMEEEE.exe`, settings in `%LocalAppData%\EEEE`, its own "Open with"
+entry and updates — so it can sit beside Markdown Midget without either touching the other.
+
+## Download and run
+
+Get the newest `MMEEEE-vX.Y.Z-win-x64.zip` (or just the `.exe`) from
+[**Releases**](https://github.com/RenegadeMinds/EEEE/releases). The exe is the whole app:
+no installer, no .NET to install. Put it anywhere and double-click it.
+
+## Requirements
+
+| | |
+|---|---|
+| **Windows 10 or 11** (64-bit) | |
+| **Microsoft Edge WebView2** | Already on Windows 11; otherwise <https://developer.microsoft.com/microsoft-edge/webview2/> |
+| **Pandoc** (free), for **Build** | <https://pandoc.org/installing.html>, or `winget install JohnMacFarlane.Pandoc` |
+| **Microsoft Word** (optional) | Fills in a Word build's contents page and makes PDFs |
+| **.NET 10 SDK** | Only to build from source: <https://dotnet.microsoft.com/download/dotnet/10.0> |
+
+The release exe includes .NET. The **Build** menus check for Pandoc and Word each time
+they open, grey out what can't be made, and link to Pandoc if it's missing.
+
+## First steps
+
+1. **Open Project** and pick a book folder (one with a `000000-index.md`, e.g. `EEE\FF`).
+2. Click entries to open them in tabs; right-click for the rest.
+3. **Check Links**, then **Build ▾** (output goes to `_build\` beside the book folder;
+   **Build ▾ ▸ Contents depth** sets the contents page's depth).
+
+## Build from source
+
+```bat
+dotnet run --project src\MarkdownMidget
+dotnet test tests\MarkdownMidget.Tests
+.\src\MarkdownMidget\Tabs\publish.ps1     REM release exe + zip in dist\
+```
+
+All of MMEEEE's own code, its scripts (the Pandoc filter Build uses, and the Python
+Word → Markdown converter) and the developer notes are in
+[`src/MarkdownMidget/Tabs`](src/MarkdownMidget/Tabs/README.md).
+
+## Credits and license
+
+MMEEEE is built on **Markdown Midget** © Funcular Labs, Inc., under the MIT License
+([LICENSE](LICENSE)); MMEEEE's additions are under the same license. Everything below
+is Markdown Midget's own README: it describes the editor MMEEEE is built on. Where it
+says *Markdown Midget*, `MarkdownMidget.exe` or `%LocalAppData%\MarkdownMidget`, MMEEEE
+uses *MMEEEE*, `MMEEEE.exe` and `%LocalAppData%\EEEE`, and its releases come from
+RenegadeMinds/EEEE.
+
+---
+
 # Markdown Midget
 
 <img src="https://raw.githubusercontent.com/FuncularLabs/MarkdownMidget/master/art/midget-256.png" alt="Markdown Midget mascot" width="120" align="right" />
@@ -41,7 +107,7 @@ the newest stable release, and it's what the badge above tracks.
 
 A prerelease (`-beta` or `-rc`) may sit above it on the page while a feature is being
 proven; take that one only if you want what's coming rather than what's settled.
-Markdown Midget can also update itself: **Help ▸ About Markdown Midget** lists the
+Markdown Midget can also update itself: **Help ▸ About MMEEEE** lists the
 newest release and any newer prerelease separately, so it's always clear which
 you're installing.
 
@@ -54,7 +120,7 @@ files once you run **File ▸ Windows Integration ▸ Register as .md editor…*
 `%LocalAppData%\Programs\MarkdownMidget\` so the Open With entry survives moving
 the download — and by default *moves* your download there rather than copying it;
 clear that checkbox to leave the download where it is. Updates come from the app
-itself: **Help ▸ About Markdown Midget** offers an Update button when a newer
+itself: **Help ▸ About MMEEEE** offers an Update button when a newer
 version exists, which for a portable exe downloads the new version into the same
 folder and starts it, leaving yours behind for you to delete.
 
@@ -199,12 +265,11 @@ the one it replaced:
 | --- | --- |
 | Explorer ▸ Properties ▸ Details ▸ **File version** | `1.0.3.57` |
 | Explorer ▸ Properties ▸ Details ▸ **Product version** | `1.0.3+build.57` |
-| The app, **Help ▸ About Markdown Midget** | `Version 1.0.3+build.57` |
+| The app, **Help ▸ About MMEEEE** | `Version 1.0.3+build.57` |
 | The app's title bar, after the document name | `\| Markdown Midget v1.0.3+build.57` |
 
 The build prints it too (`MarkdownMidget local build #57 - ...`). Check the exe's
-Properties before copying it over an installed copy and **Help ▸ About Markdown
-Midget** after launching: if the numbers differ, the copy is not the build you made.
+Properties before copying it over an installed copy and **Help ▸ About MMEEEE** after launching: if the numbers differ, the copy is not the build you made.
 
 The counter is the **repository's**, not the checkout's — `.git/mm-local-build-number`
 — so a clone and all its worktrees take numbers from one sequence and no number is
@@ -371,7 +436,7 @@ The last few releases. See [CHANGELOG.md](CHANGELOG.md) for the full history and
   registering now leaves your **`.md` default** alone. The update from an older
   version is still done by that version, so it may reset the default one last time;
   if it does, a notice offers **Make it the default…**, which opens Windows Settings, as
-  **File ▸ Windows Integration ▸ Make Markdown Midget the default…** does.
+  **File ▸ Windows Integration ▸ Make MMEEEE the default…** does.
   **Ctrl+H** opens Replace, and Find and Replace start with the **text you selected**.
 - **v1.0.0-rc1** *(prerelease)* — **The 1.0 release candidate.** A save from the
   formatted view now keeps the text you didn't change as written: the blocks you

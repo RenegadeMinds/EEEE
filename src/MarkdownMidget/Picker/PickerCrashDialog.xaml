@@ -12,9 +12,9 @@
         <TextBlock Text="Windows' Open and Save dialog closed unexpectedly."
                    TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8" />
         <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
-                   Text="The usual cause is an add-on from another program that Windows loads into that dialog (a shell extension), such as a cloud-sync, archive or antivirus tool. Markdown Midget shows that dialog from a separate helper, so only the helper was lost: your document is safe." />
+                   Text="The usual cause is an add-on from another program that Windows loads into that dialog (a shell extension), such as a cloud-sync, archive or antivirus tool. MMEEEE shows that dialog from a separate helper, so only the helper was lost: your document is safe." />
         <TextBlock TextWrapping="Wrap" Margin="0,0,0,14"
-                   Text="Markdown Midget has switched to its own built-in file picker, which loads no add-ons, and opens it next so you can carry on. Once the cause is fixed, switch back: Edit ▸ Settings, then clear Always use the built-in file picker." />
+                   Text="MMEEEE has switched to its own built-in file picker, which loads no add-ons, and opens it next so you can carry on. Once the cause is fixed, switch back: Edit ▸ Settings, then clear Always use the built-in file picker." />
 
         <TextBlock Text="What Windows recorded" FontWeight="SemiBold" Margin="0,0,0,4" />
         <TextBlock x:Name="FaultText" Text="Looking…" TextWrapping="Wrap" Margin="0,0,0,12" />

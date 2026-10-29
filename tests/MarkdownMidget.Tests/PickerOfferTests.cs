@@ -123,7 +123,7 @@ public class PickerOfferTests
     {
         var findings = new PickerCrashFindings(unchecked((int)0xC0000005), null, FaultKind.None, []);
         var text = PickerCrashClues.Details(findings, "1.0.1", "os", PickerOffer.Record(PickerOffer.Crash, "1.0.1", When));
-        Assert.Contains("The built-in file picker was switched on: reason crash, by Markdown Midget 1.0.1, at 2026-10-08 18:40:00 UTC", text);
+        Assert.Contains("The built-in file picker was switched on: reason crash, by MMEEEE 1.0.1, at 2026-10-08 18:40:00 UTC", text);
         Assert.DoesNotContain("switched on", PickerCrashClues.Details(findings, "1.0.1", "os"));
     }
 }

@@ -27,7 +27,7 @@ internal sealed record UpdateCheck(ReleaseInfo? Stable, ReleaseInfo? PrereleaseR
 /// </summary>
 internal static class ReleaseFeed
 {
-    private const string AssetSuffix = "-win-x64-net10.exe";
+    private const string AssetSuffix = "-win-x64.exe";
 
     public static UpdateCheck Select(string releasesJson)
     {

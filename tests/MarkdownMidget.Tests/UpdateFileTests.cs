@@ -184,7 +184,7 @@ public class SameFileTests : IDisposable
         // And it must not blame a race for a missing program: closing windows can't
         // produce an exe that isn't there.
         Assert.DoesNotContain("Close the other windows", ex.Message);
-        Assert.Contains("no Markdown Midget program file", ex.Message);
+        Assert.Contains("no MMEEEE program file", ex.Message);
         // A sibling's own recovery can hold the gap for ~600ms, so this must not give
         // up first and announce a missing program while the window next door is putting
         // one back — and where it does give up, it says that is a possibility.

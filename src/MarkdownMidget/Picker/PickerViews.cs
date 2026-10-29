@@ -204,7 +204,7 @@ internal sealed class PickerViewStore
     }
 
     public static string DefaultDirectory =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MarkdownMidget");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentity.DataFolderName);
 
     public PickerViewsFile Load() => TryRead(out var file) ? file : new();
 

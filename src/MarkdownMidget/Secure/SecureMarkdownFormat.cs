@@ -225,7 +225,7 @@ internal static class SecureMarkdownFormat
         var version = container[6];
         if (version != FormatVersion)
             throw new SecureMarkdownException(SecureMarkdownError.Unsupported,
-                $"This file uses Secure Markdown format version {version}, which this version of the app doesn't support. Update Markdown Midget and try again.");
+                $"This file uses Secure Markdown format version {version}, which this version of the app doesn't support. Update MMEEEE and try again.");
         ValidateKdf(container[7], BitConverter.ToUInt32(container, 8), BitConverter.ToUInt32(container, 12));
     }
 
@@ -272,7 +272,7 @@ internal static class SecureMarkdownFormat
                 break;
             default:
                 throw new SecureMarkdownException(SecureMarkdownError.Unsupported,
-                    "This file uses a key-derivation method this version of the app doesn't support. Update Markdown Midget and try again.");
+                    "This file uses a key-derivation method this version of the app doesn't support. Update MMEEEE and try again.");
         }
     }
 

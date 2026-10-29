@@ -92,7 +92,7 @@ internal sealed class ThemeStore
     /// </summary>
     public static (string Root, bool FellBack) ResolveRoot(bool installed, string exeDir, string localAppData)
     {
-        var profile = Path.Combine(localAppData, "MarkdownMidget", "themes");
+        var profile = Path.Combine(localAppData, AppIdentity.DataFolderName, "themes");
         if (installed) return (profile, false);
 
         var portable = Path.Combine(exeDir, "themes");

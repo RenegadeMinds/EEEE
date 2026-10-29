@@ -58,7 +58,7 @@ internal sealed class BackupStore : IDisposable
 
     public static string DefaultDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "MarkdownMidget", "backup");
+        AppIdentity.DataFolderName, "backup");
 
     private string ContentPath(string id) => Path.Combine(_dir, id + ".md");
     private string EncryptedContentPath(string id) => Path.Combine(_dir, id + ".mdenc");

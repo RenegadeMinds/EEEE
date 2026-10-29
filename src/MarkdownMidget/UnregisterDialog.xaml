@@ -61,7 +61,7 @@
                     <Image Source="/Assets/midget-64.png" Width="22" Height="22" HorizontalAlignment="Center" />
                 </Border>
             </StackPanel>
-            <TextBlock Style="{StaticResource Caption}" Text="Markdown Midget stops appearing when you right-click a .md file. Also cleans stale references." />
+            <TextBlock Style="{StaticResource Caption}" Text="MMEEEE stops appearing when you right-click a .md file. Also cleans stale references." />
         </StackPanel>
 
         <!-- Restore to original -->

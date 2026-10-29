@@ -98,8 +98,8 @@ internal static class FilePickerService
                 catch (Exception ex)
                 {
                     CrashLog.Write("PickerCrashDialog", ex);
-                    MessageBox.Show(owner, "Windows' file dialog closed unexpectedly, so Markdown Midget has switched to its " +
-                        "built-in file picker. Switch back in Edit ▸ Settings.", "Markdown Midget");
+                    MessageBox.Show(owner, "Windows' file dialog closed unexpectedly, so MMEEEE has switched to its " +
+                        "built-in file picker. Switch back in Edit ▸ Settings.", AppIdentity.Name);
                 }
                 return ShowBuiltIn(owner, request);
             default:

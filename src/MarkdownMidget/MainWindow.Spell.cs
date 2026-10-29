@@ -463,7 +463,7 @@ public partial class MainWindow
             _spellService.AddToDictionary(click.Word);
             RequestSpellCheckSoon();
         });
-        add.ToolTip = "Stored privately in Markdown Midget's own dictionary — the Windows dictionary is not modified.";
+        add.ToolTip = "Stored privately in MMEEEE's own dictionary — the Windows dictionary is not modified.";
         items.Add(add);
         items.Add(MakeItem("_Ignore All", () =>
         {

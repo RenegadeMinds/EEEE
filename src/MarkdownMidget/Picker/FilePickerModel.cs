@@ -198,8 +198,8 @@ internal static class FilePickerModel
 
     /// <summary>The line under the picker's buttons: whose picker it is and, while "Always use
     /// the built-in file picker" is on, the way back. After a one-off fallback it is off already.</summary>
-    public static string NoteText(bool settingOn) => "Markdown Midget's own file picker."
-        + (settingOn ? " To use Windows' dialog again: Edit ▸ Settings ▸ File dialogs, then restart Markdown Midget." : "");
+    public static string NoteText(bool settingOn) => "MMEEEE's own file picker."
+        + (settingOn ? " To use Windows' dialog again: Edit ▸ Settings ▸ File dialogs, then restart MMEEEE." : "");
 
     /// <summary>A column's header: its name, and on the sorted column ▲ (A to Z, oldest or
     /// smallest first) or ▼. Text, so it takes the header's own colour in light and dark mode.</summary>

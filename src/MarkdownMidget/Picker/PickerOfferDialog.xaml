@@ -1,7 +1,7 @@
 <Window x:Class="MarkdownMidget.Picker.PickerOfferDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Markdown Midget" SizeToContent="Height" Width="440" ResizeMode="NoResize"
+        Title="MMEEEE" SizeToContent="Height" Width="440" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/Assets/midget-256.png">
     <!-- The one-time offer of Windows' dialog (#12, item 6). The chrome palette and dialog
          placement reach it as every window: no code here. Esc and the close box mean Keep. -->

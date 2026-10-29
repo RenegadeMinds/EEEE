@@ -164,6 +164,6 @@
     <SolidColorBrush x:Key="Chrome.Picker.Section.Border" Color="#FFB4BCC6" />
     <SolidColorBrush x:Key="Chrome.Picker.Section.Header" Color="#FFE9EDF2" />
     <!-- Toolbar pictures drawn in near-black: a light copy replaces each in dark mode. -->
-    <BitmapImage x:Key="Chrome.Icon.NumberedList" UriSource="pack://application:,,,/MarkdownMidget;component/Assets/numbered-list-64.png" />
-    <BitmapImage x:Key="Chrome.Icon.SpellCheck" UriSource="pack://application:,,,/MarkdownMidget;component/Assets/spellcheck-64.png" />
+    <BitmapImage x:Key="Chrome.Icon.NumberedList" UriSource="pack://application:,,,/MMEEEE;component/Assets/numbered-list-64.png" />
+    <BitmapImage x:Key="Chrome.Icon.SpellCheck" UriSource="pack://application:,,,/MMEEEE;component/Assets/spellcheck-64.png" />
 </ResourceDictionary>

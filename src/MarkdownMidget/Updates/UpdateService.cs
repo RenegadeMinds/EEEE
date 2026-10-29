@@ -31,7 +31,7 @@ namespace MarkdownMidget.Updates;
 internal static class UpdateService
 {
     private const string ReleasesApi =
-        "https://api.github.com/repos/FuncularLabs/MarkdownMidget/releases?per_page=20";
+        "https://api.github.com/repos/" + AppIdentity.Repository + "/releases?per_page=20";
 
     private static readonly HttpClient Http = CreateClient();
 
@@ -39,7 +39,7 @@ internal static class UpdateService
     {
         var c = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
         // GitHub's API requires a User-Agent.
-        c.DefaultRequestHeaders.UserAgent.ParseAdd("MarkdownMidget-Updater");
+        c.DefaultRequestHeaders.UserAgent.ParseAdd(AppIdentity.Name + "-Updater");
         c.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
         return c;
     }
@@ -61,7 +61,7 @@ internal static class UpdateService
         if (release.AssetUrl is null || release.AssetName is null) return null;
         try
         {
-            var dir = Path.Combine(Path.GetTempPath(), "MarkdownMidget-update");
+            var dir = Path.Combine(Path.GetTempPath(), AppIdentity.Name + "-update");
             Directory.CreateDirectory(dir);
             // AssetName comes from the release JSON — never let it steer the path.
             var dest = Path.Combine(dir, Path.GetFileName(release.AssetName));
@@ -89,6 +89,12 @@ internal static class UpdateService
     // string): the leaf's Organization, and the chain root — Microsoft only issues a
     // cert under this root with O="Funcular Labs, Inc." after verifying that identity.
     private const string ExpectedOrg = "Funcular Labs, Inc.";
+
+    /// <summary>
+    /// MMEEEE: false while its releases are unsigned. The About box then offers the
+    /// release page instead of downloading and running an exe it can't verify.
+    /// </summary>
+    internal static bool SignedReleases => false;
     private const string TrustedRootThumbprint = "F40042E2E5F7E8EF8189FED15519AECE42C3BFA2"; // MS Identity Verification Root CA 2020
 
     /// <summary>
@@ -264,9 +270,9 @@ internal static class UpdateService
         catch (Exception ex)
         {
             throw new InvalidOperationException(
-                "Markdown Midget is updated, but this window couldn't start the new " +
+                "MMEEEE is updated, but this window couldn't start the new " +
                 "version — most likely another window was busy with its own update at " +
-                "that moment. Close this window and start Markdown Midget again from " +
+                "that moment. Close this window and start MMEEEE again from " +
                 "your shortcut or the Start menu.", ex);
         }
     }
@@ -397,20 +403,20 @@ internal static class UpdateService
         UnauthorizedAccessException =>
             $"Windows refused to rename {target}, so the update can't be applied. That is " +
             "usually a security product guarding the folder, or the folder's own " +
-            "permissions — not another Markdown Midget window.",
+            "permissions — not another MMEEEE window.",
         // Before the "another window" arm: something holding the file is not the same
         // as something racing us for a name, and the remedy is different.
         IOException sharing when IsSharingViolation(sharing) =>
             $"Something else has {target} open, so it couldn't be moved aside and the " +
             "update wasn't applied. Nothing has changed. That is usually a virus scanner, " +
-            "or another copy of Markdown Midget being installed at the same time — either " +
+            "or another copy of MMEEEE being installed at the same time — either " +
             "way it passes, so trying again shortly normally works.",
         _ when File.Exists(target) =>
-            "Couldn't move the running program out of the way — another Markdown Midget " +
+            "Couldn't move the running program out of the way — another MMEEEE " +
             "window kept getting there first. Close the other windows and try the update " +
             "again.",
         _ =>
-            $"There is no Markdown Midget program file at {target} to update. Another " +
+            $"There is no MMEEEE program file at {target} to update. Another " +
             "window may be partway through its own update — if so, wait a moment and try " +
             "again. Otherwise reinstall from the website, or run the copy you have from " +
             "wherever it actually lives.",
@@ -619,7 +625,7 @@ internal static class UpdateService
                     $"The update failed partway and left no program at {target}. Nothing is " +
                     $"lost: in that folder, rename either \"{Path.GetFileName(parked)}\" (the " +
                     $"version you were running) or \"{Path.GetFileName(staged)}\" (the new one, " +
-                    $"already verified) to \"{Path.GetFileName(target)}\", and Markdown Midget " +
+                    $"already verified) to \"{Path.GetFileName(target)}\", and MMEEEE " +
                     "will start again.", ex);
             }
         }
@@ -656,7 +662,7 @@ internal static class UpdateService
             throw new InvalidOperationException(
                 $"A program file appeared at {target} while this update was being applied, " +
                 "and this window couldn't read the two files to compare them — so it has " +
-                "changed nothing and nothing is lost. Close every Markdown Midget window " +
+                "changed nothing and nothing is lost. Close every MMEEEE window " +
                 "and try the update again.");
 
         throw new InvalidOperationException(
@@ -664,7 +670,7 @@ internal static class UpdateService
             $"applied, and it is not the version that was just downloaded and verified. " +
             $"Nothing has been lost and nothing unverified has been started: the version " +
             $"you were running is beside it as \"{Path.GetFileName(parked)}\", and the " +
-            $"new one as \"{Path.GetFileName(staged)}\". Close every Markdown Midget " +
+            $"new one as \"{Path.GetFileName(staged)}\". Close every MMEEEE " +
             "window and try the update again.");
     }
 
@@ -704,7 +710,7 @@ internal static class UpdateService
                 // possibly at a half-written binary.
                 throw new InvalidOperationException(
                     $"{Path.GetFileName(dest)} is already here and in use — most likely " +
-                    "another Markdown Midget window is running it. Close that window and " +
+                    "another MMEEEE window is running it. Close that window and " +
                     "try again.", ex);
             }
         }

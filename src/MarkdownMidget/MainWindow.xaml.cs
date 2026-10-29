@@ -26,7 +26,7 @@ public partial class MainWindow : Window
         typeof(MainWindow).Assembly
             .GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()
             ?.InformationalVersion ?? "0.0.0");
-    private static readonly string ProductDesc = "Markdown Midget " + AppVersion;
+    private static readonly string ProductDesc = "MMEEEE " + AppVersion;
 
     private string? _currentPath;
     private string? _displayName; // title for recovered content that has no path
@@ -280,7 +280,7 @@ public partial class MainWindow : Window
 
     private static string WebViewBaseDir => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "MarkdownMidget", "WebView2");
+        AppIdentity.DataFolderName, "WebView2");
 
     // Unique per launch. A crashed/force-killed instance can orphan WebView2 child
     // processes that keep its profile folder locked; a bare process id could later be
@@ -403,9 +403,9 @@ public partial class MainWindow : Window
     {
         var reset = MessageBox.Show(this,
             $"The editor surface couldn't load ({reason}).\n\n" +
-            "Restart Markdown Midget with a fresh editor profile?\n\n" +
+            "Restart MMEEEE with a fresh editor profile?\n\n" +
             "Your documents and settings are not affected.",
-            "Markdown Midget", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            AppIdentity.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (reset != MessageBoxResult.Yes) return;
 
         try
@@ -445,7 +445,7 @@ public partial class MainWindow : Window
         var asm = Assembly.GetExecutingAssembly();
         var target = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "MarkdownMidget", "editor");
+            AppIdentity.DataFolderName, "editor");
         Directory.CreateDirectory(target);
 
         foreach (var name in asm.GetManifestResourceNames())
@@ -1187,7 +1187,7 @@ public partial class MainWindow : Window
             {
                 MessageBox.Show(this, "Couldn't read the document from the editor, so the " +
                     "markdown view wasn't opened. Your work is unaffected.",
-                    "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 // The toggle button flipped itself on the click; put it back.
                 SyncViewToggles();
                 return;
@@ -1240,7 +1240,7 @@ public partial class MainWindow : Window
             {
                 MessageBox.Show(this, "Couldn't hand your markdown back to the formatted " +
                     "view, so it's been left as it is. Your edits are still here.",
-                    "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 SyncViewToggles();
                 return;
             }
@@ -1288,7 +1288,7 @@ public partial class MainWindow : Window
         var name = _currentPath is not null ? Path.GetFileName(_currentPath)
                  : _displayName ?? "Untitled";
         var result = MessageBox.Show(
-            $"Save changes to {name}?", "Markdown Midget",
+            $"Save changes to {name}?", AppIdentity.Name,
             MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
         return result switch
         {
@@ -1310,7 +1310,7 @@ public partial class MainWindow : Window
         try { Process.Start(new ProcessStartInfo(exe, "--new") { UseShellExecute = false }); }
         catch (Exception ex)
         {
-            MessageBox.Show($"Couldn't open a new window:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"Couldn't open a new window:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
@@ -1448,7 +1448,7 @@ public partial class MainWindow : Window
                     }
                     catch (Secure.SecureMarkdownException ex)
                     {
-                        MessageBox.Show(this, ex.Message, "Markdown Midget",
+                        MessageBox.Show(this, ex.Message, AppIdentity.Name,
                             MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
@@ -1475,7 +1475,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Couldn't open the file:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"Couldn't open the file:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
         finally
@@ -1507,11 +1507,11 @@ public partial class MainWindow : Window
         FlashStatus("Already open in another window; opened read-only here");
         HideBusy();   // the message shouldn't sit under a busy overlay
         MessageBox.Show(this,
-            $"{Path.GetFileName(path)} is open in another Markdown Midget window, " +
+            $"{Path.GetFileName(path)} is open in another MMEEEE window, " +
             "which couldn't be brought to the front.\n\n" +
             "It has been opened read-only here. Once it is closed in the other " +
             "window, turn off Edit ▸ Read Only to edit it here.",
-            "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Information);
+            AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     /// <summary>Loads a document into the editor and resets the clean baseline + history.
@@ -1830,7 +1830,7 @@ public partial class MainWindow : Window
                 "Couldn't read the document from the editor, so nothing was saved.\n\n" +
                 "Your work is untouched — the file on disk is unchanged and the " +
                 "unsaved-changes copy has been kept. Try again, or restart the app.",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
         _suppressWatcher = true;
@@ -1867,7 +1867,7 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             _suppressWatcher = false;
-            MessageBox.Show($"Couldn't save the file:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"Couldn't save the file:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
@@ -1909,7 +1909,7 @@ public partial class MainWindow : Window
         () => MessageBox.Show(this,
                 "This writes a readable copy with no password. Anyone with the " +
                 "file can read it. The encrypted file stays where it is.\n\nContinue?",
-                "Markdown Midget", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes);
+                AppIdentity.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes);
 
     // ===== Secure Markdown operations =====
 
@@ -1935,7 +1935,7 @@ public partial class MainWindow : Window
             target = Secure.SecureUi.EncryptedPathFor(original);
             if (File.Exists(target) && MessageBox.Show(this,
                     $"{Path.GetFileName(target)} already exists. Replace it?",
-                    "Markdown Midget", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+                    AppIdentity.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning)
                 != MessageBoxResult.Yes) return;
         }
         else
@@ -1969,7 +1969,7 @@ public partial class MainWindow : Window
             _suppressWatcher = false;
             if (original is not null) StartWatching(original);
             MessageBox.Show(this, $"Couldn't encrypt the document:\n{ex.Message}",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
         // The encrypted file is written AND verified — only now may the plaintext
@@ -2014,7 +2014,7 @@ public partial class MainWindow : Window
         {
             _suppressWatcher = false;
             MessageBox.Show(this, $"Couldn't change the password:\n{ex.Message}\n\nThe old password still applies.",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
         _docPassword = pw;
@@ -2034,7 +2034,7 @@ public partial class MainWindow : Window
         if (MessageBox.Show(this,
                 "This writes a readable copy with no password. Anyone with the file can " +
                 "read it. The encrypted file is removed.\n\nContinue?",
-                "Markdown Midget", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+                AppIdentity.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning)
             != MessageBoxResult.Yes) return;
         var markdown = await TryGetDocumentMarkdownAsync();
         if (markdown is null) { ReportEditorUnavailable(); return; }
@@ -2043,7 +2043,7 @@ public partial class MainWindow : Window
         var target = Secure.SecureUi.PlaintextPathFor(encryptedOriginal);
         if (File.Exists(target) && MessageBox.Show(this,
                 $"{Path.GetFileName(target)} already exists. Replace it?",
-                "Markdown Midget", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+                AppIdentity.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning)
             != MessageBoxResult.Yes) return;
 
         StopWatching();
@@ -2062,7 +2062,7 @@ public partial class MainWindow : Window
             _suppressWatcher = false;
             StartWatching(encryptedOriginal);
             MessageBox.Show(this, $"Couldn't convert the document:\n{ex.Message}",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
         // Plaintext written and flushed; the ciphertext original can go (no scrub
@@ -2073,7 +2073,7 @@ public partial class MainWindow : Window
             MessageBox.Show(this,
                 $"The readable copy was written, but the encrypted file couldn't be removed:\n" +
                 $"{encryptedOriginal}\n{ex.Message}",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         _currentPath = target;
@@ -2127,14 +2127,14 @@ public partial class MainWindow : Window
             MessageBox.Show(this,
                 $"The document was encrypted, but the readable original couldn't be removed:\n" +
                 $"{path}\n{ex.Message}\n\nDelete it by hand when whatever holds it lets go.",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
     private void ReportEditorUnavailable() => MessageBox.Show(this,
         "Couldn't read the document from the editor, so nothing was changed. " +
         "Try again, or restart the app.",
-        "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+        AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
 
     /// <summary>
     /// What the window shows when the editor comes up, and only then any crash
@@ -2602,7 +2602,7 @@ public partial class MainWindow : Window
                 if (MessageBox.Show(this,
                         $"Permanently delete the unsaved encrypted copy of {meta.Describe()}? " +
                         "Without its password it can never be read, and this cannot be undone.",
-                        "Markdown Midget", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+                        AppIdentity.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning)
                     == MessageBoxResult.Yes)
                 {
                     _backup?.Purge(meta.SessionId);
@@ -2625,7 +2625,7 @@ public partial class MainWindow : Window
             }
             catch (Secure.SecureMarkdownException ex)
             {
-                MessageBox.Show(this, ex.Message, "Markdown Midget",
+                MessageBox.Show(this, ex.Message, AppIdentity.Name,
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -2708,14 +2708,14 @@ public partial class MainWindow : Window
         var body = new System.Text.StringBuilder();
         if (abandoned.Count > 0)
         {
-            body.Append("Markdown Midget couldn't restore this unsaved work after several attempts:\n\n  ");
+            body.Append("MMEEEE couldn't restore this unsaved work after several attempts:\n\n  ");
             body.Append(string.Join("\n  ", abandoned.Select(a => a.Describe())));
             body.Append("\n\n");
         }
         if (failedToOpen > 0)
             body.Append(abandoned.Count > 0
                 ? $"It also couldn't open a window for {failedToOpen} more recovered document(s); "
-                : $"Markdown Midget couldn't open a window for {failedToOpen} recovered document(s); ")
+                : $"MMEEEE couldn't open a window for {failedToOpen} recovered document(s); ")
                 .Append("they'll be offered again next time.\n\n");
         body.Append("The files are still here, as plain markdown you can open in any editor:\n");
         body.Append(Backup.BackupStore.DefaultDirectory);
@@ -3016,7 +3016,7 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             MessageBox.Show($"Couldn't write a backup of your current version:\n{ex.Message}\n\nThe disk version was NOT reloaded.",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -3253,7 +3253,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Couldn't save:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"Couldn't save:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
@@ -3264,7 +3264,7 @@ public partial class MainWindow : Window
         var savedFileName = Path.GetFileName(picked);
         var pick = MessageBox.Show(
             $"Saved your version to:\n{picked}\n\nKeep editing your saved version ({savedFileName})?\n\nYes = open '{savedFileName}'\nNo = continue with the externally-modified '{fileName}'",
-            "Markdown Midget", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            AppIdentity.Name, MessageBoxButton.YesNo, MessageBoxImage.Question);
         // Each load passes the password of the file it loads (rounds 1 and 2 each found a
         // password-dropping load; these are call sites 3 and 4 of 4 - every
         // LoadDocumentAsync caller on an encrypted path now passes it through).
@@ -3296,7 +3296,7 @@ public partial class MainWindow : Window
         // copy in place copies nothing. InstallToAppData refuses the same exe itself.
         if (!alreadyInstalled && RegistrationService.CurrentExeNeedsFilesBesideIt())
         {
-            MessageBox.Show(this, RegistrationService.DevelopmentBuildRefusal, "Markdown Midget",
+            MessageBox.Show(this, RegistrationService.DevelopmentBuildRefusal, AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
@@ -3341,20 +3341,20 @@ public partial class MainWindow : Window
                 return;
             }
 
-            var lines = new List<string> { "Registered Markdown Midget as an editor for .md files.", "", "Exe: " + exeToRegister };
+            var lines = new List<string> { "Registered MMEEEE as an editor for .md files.", "", "Exe: " + exeToRegister };
             if (dlg.AddStartMenu) lines.Add("Start menu: added");
             if (dlg.AddDesktop) lines.Add("Desktop shortcut: added");
             lines.Add("");
-            lines.Add("Earlier Markdown Midget entries in \"Open with\" now open this version, so a default you chose keeps working. Unregister removes them.");
+            lines.Add("Earlier MMEEEE entries in \"Open with\" now open this version, so a default you chose keeps working. Unregister removes them.");
             if (dlg.SetAsDefault) lines.Add("\n" + DefaultApp.RegisterNote(Environment.OSVersion.Version.Build));
 
-            MessageBox.Show(this, string.Join("\n", lines), "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(this, string.Join("\n", lines), AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Information);
             if (dlg.SetAsDefault) DefaultApp.OpenSettings(this);   // registered now, so this opens the page the note names, as Make default does
         }
         catch (Exception ex)
         {
             MessageBox.Show(this, "Couldn't complete registration:\n\n" + ex.Message,
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
@@ -3407,12 +3407,12 @@ public partial class MainWindow : Window
             if (dlg.RemoveAppDataCopy) { RegistrationService.UninstallFromAppData(); done.Add("• Removed the installed copy from the app folder"); }
 
             var summary = done.Count > 0 ? string.Join("\n", done) : "Nothing was selected.";
-            MessageBox.Show(this, summary, "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(this, summary, AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
             MessageBox.Show(this, "Couldn't complete unregistration:\n\n" + ex.Message,
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
@@ -3992,7 +3992,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Print failed:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"Print failed:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
@@ -4033,12 +4033,12 @@ public partial class MainWindow : Window
 
             var ok = await Web.CoreWebView2.PrintToPdfAsync(picked, settings);
             if (!ok)
-                MessageBox.Show("PDF export did not complete.", "Markdown Midget",
+                MessageBox.Show("PDF export did not complete.", AppIdentity.Name,
                     MessageBoxButton.OK, MessageBoxImage.Warning);
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"PDF export failed:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"PDF export failed:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
@@ -4047,7 +4047,7 @@ public partial class MainWindow : Window
 
     private static string RecentStorePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "MarkdownMidget", "recent.json");
+        AppIdentity.DataFolderName, "recent.json");
 
     private void LoadRecent()
     {
@@ -4130,7 +4130,7 @@ public partial class MainWindow : Window
         if (sender is not MenuItem { Tag: string path }) return;
         if (!File.Exists(path))
         {
-            MessageBox.Show($"File not found:\n{path}", "Markdown Midget",
+            MessageBox.Show($"File not found:\n{path}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             _recentFiles.Remove(path);
             SaveRecent();
@@ -4237,7 +4237,7 @@ public partial class MainWindow : Window
 
     private static string SettingsStorePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "MarkdownMidget", "settings.json");
+        AppIdentity.DataFolderName, "settings.json");
 
     private void LoadSettings()
     {
@@ -5141,7 +5141,7 @@ public partial class MainWindow : Window
 
         if (DropHandshake.StatusFor(outcome) is { } notice) FlashStatus(notice);
         if (outcome == DropInsertOutcome.ReadFailed)
-            MessageBox.Show(this, $"Couldn't read the image:\n{readFailure!.Message}", "Markdown Midget",
+            MessageBox.Show(this, $"Couldn't read the image:\n{readFailure!.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         if (outcome == DropInsertOutcome.Insert) InsertMarkdownFragment(DropRouting.Markdown(fragments));
         return DropHandshake.CallerFinishesTheDrop(outcome);
@@ -5406,7 +5406,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Couldn't open a new window:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"Couldn't open a new window:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
@@ -5477,7 +5477,7 @@ public partial class MainWindow : Window
         {
             var path = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "MarkdownMidget", fileName);
+                AppIdentity.DataFolderName, fileName);
 
             // Always restore the canonical text from the embedded copy, then mark the
             // file read-only so it's harder to overwrite by accident.
@@ -5492,7 +5492,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Couldn't open {fileName}:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show($"Couldn't open {fileName}:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
@@ -5647,7 +5647,7 @@ public partial class MainWindow : Window
             // work would be gone. The user's "discard" answer applied to a restart
             // that never happened, so the question is honestly re-askable.
             MessageBox.Show(this, $"Couldn't start v{onDisk}:\n{ex.Message}",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
         // Only now, with the replacement window genuinely started: asked and

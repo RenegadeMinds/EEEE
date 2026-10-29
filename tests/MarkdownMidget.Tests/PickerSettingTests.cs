@@ -22,8 +22,8 @@ public class PickerSettingTests
     [Fact]
     public void TheNoteSaysHowToSwitchBackOnlyWhileTheSettingIsOn()
     {
-        Assert.Equal("Markdown Midget's own file picker. To use Windows' dialog again: Edit ▸ Settings ▸ File dialogs, then restart Markdown Midget.",
+        Assert.Equal("MMEEEE's own file picker. To use Windows' dialog again: Edit ▸ Settings ▸ File dialogs, then restart MMEEEE.",
             FilePickerModel.NoteText(settingOn: true));
-        Assert.Equal("Markdown Midget's own file picker.", FilePickerModel.NoteText(settingOn: false));   // a one-off fallback
+        Assert.Equal("MMEEEE's own file picker.", FilePickerModel.NoteText(settingOn: false));   // a one-off fallback
     }
 }

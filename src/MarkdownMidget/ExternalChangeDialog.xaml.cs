@@ -15,7 +15,7 @@ public partial class ExternalChangeDialog : Window
     public ExternalChangeDialog(string fileName, string backupPath)
     {
         InitializeComponent();
-        HeaderText.Text = $"‘{fileName}’ was modified outside Markdown Midget.";
+        HeaderText.Text = $"‘{fileName}’ was modified outside MMEEEE.";
         BackupPathText.Text = backupPath;
     }
 

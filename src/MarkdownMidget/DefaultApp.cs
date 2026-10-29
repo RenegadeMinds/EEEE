@@ -10,27 +10,27 @@ namespace MarkdownMidget;
 /// Settings, from Windows 11 22H2 (build 22621) on the page for the app Register lists, before that on Default apps.</summary>
 internal static class DefaultApp
 {
-    internal const string LaunchFailed = "Couldn't open Windows Settings. Open Settings ▸ Apps ▸ Default apps and choose Markdown Midget for .md files there.";
+    internal const string LaunchFailed = "Couldn't open Windows Settings. Open Settings ▸ Apps ▸ Default apps and choose MMEEEE for .md files there.";
     private const string DefaultApps = "ms-settings:defaultapps";
     internal static string SettingsUri(int windowsBuild) => windowsBuild >= 22621
         ? DefaultApps + "?registeredAppUser=" + Uri.EscapeDataString(RegistrationService.DisplayName) : DefaultApps;
     /// <summary>Register's last line with Make it my default ticked, before it calls <see cref="OpenSettings(Window)"/>: names the page <see cref="SettingsUri"/> opens.</summary>
     internal static string RegisterNote(int windowsBuild) => SettingsUri(windowsBuild) != DefaultApps
-        ? "Settings will open on Markdown Midget's page: click .md, choose Markdown Midget, then Set default (Windows requires this last step)."
-        : "Settings will open on Default apps: set .md to Markdown Midget there (Windows requires this last step).";
-    internal static string ButtonTip(bool registered) => registered ? "Opens Windows Settings, where you choose Markdown Midget for .md files."
-        : "Register Markdown Midget first: File ▸ Windows Integration ▸ Register as .md editor…";
+        ? "Settings will open on MMEEEE's page: click .md, choose MMEEEE, then Set default (Windows requires this last step)."
+        : "Settings will open on Default apps: set .md to MMEEEE there (Windows requires this last step).";
+    internal static string ButtonTip(bool registered) => registered ? "Opens Windows Settings, where you choose MMEEEE for .md files."
+        : "Register MMEEEE first: File ▸ Windows Integration ▸ Register as .md editor…";
     internal static void OpenSettings(Window owner) => OpenSettings(RegistrationService.IsRegistered(), Environment.OSVersion.Version.Build, Launch, Tell(owner));
     internal static void AfterMove(Window owner, bool makeDefault)   // IsRegistered is read only when there is something to do
         => AfterMove(makeDefault, makeDefault && RegistrationService.IsRegistered(), Environment.OSVersion.Version.Build, Launch, Tell(owner));
     private static void Launch(string uri) => Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true })?.Dispose();
-    private static Action<string> Tell(Window owner) => text => MessageBox.Show(owner, text, "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Information);
+    private static Action<string> Tell(Window owner) => text => MessageBox.Show(owner, text, AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Information);
     /// <summary>The installed copy a Move install started (MainWindow.MakeDefaultAfterMove), once its window has landed: Register handed
     /// off before its message and Settings, so with Make it my default ticked this says the note, then opens Settings as Register does.</summary>
     internal static void AfterMove(bool makeDefault, bool registered, int windowsBuild, Action<string> launch, Action<string> tell)
     {
         if (!makeDefault) return;
-        tell("Registered Markdown Midget as an editor for .md files.\n\n" + RegisterNote(windowsBuild));
+        tell("Registered MMEEEE as an editor for .md files.\n\n" + RegisterNote(windowsBuild));
         OpenSettings(registered, windowsBuild, launch, tell);
     }
 
@@ -56,10 +56,10 @@ internal static class DefaultApp
     /// <summary>"No longer" only when the last run recorded that .md opened with us. With no record (rc1 kept none), a reset by
     /// Windows and a choice of another app look alike, so the notice claims neither.</summary>
     internal static string NoticeText(bool? previousRecord) => previousRecord == true
-        ? "Windows no longer opens .md files with Markdown Midget." : "Windows doesn't open .md files with Markdown Midget.";
+        ? "Windows no longer opens .md files with MMEEEE." : "Windows doesn't open .md files with MMEEEE.";
 
     /// <summary>The per-session lock a showing notice holds, so a second window shows none; null if another holds it. Release on this thread.</summary>
-    internal static Mutex? TryHoldNotice(string name = @"Local\MarkdownMidget.DefaultNotice")
+    internal static Mutex? TryHoldNotice(string name = @"Local\" + AppIdentity.Name + ".DefaultNotice")
     {
         Mutex? mutex = null;
         try { mutex = new Mutex(false, name); if (mutex.WaitOne(0)) return mutex; }
@@ -84,7 +84,7 @@ internal static class DefaultApp
     {
         var never = new CheckBox { Content = "_Don't show this again", Margin = new Thickness(0, 14, 0, 14) };
         var make = new Button { Content = "_Make it the default…", IsDefault = true, Padding = new Thickness(10, 2, 10, 2), Margin = new Thickness(0, 0, 8, 0) };
-        var dlg = new Window { Owner = owner, Title = "Markdown Midget", SizeToContent = SizeToContent.WidthAndHeight, ResizeMode = ResizeMode.NoResize,
+        var dlg = new Window { Owner = owner, Title = AppIdentity.Name, SizeToContent = SizeToContent.WidthAndHeight, ResizeMode = ResizeMode.NoResize,
             ShowInTaskbar = false, WindowStartupLocation = WindowStartupLocation.CenterOwner, Content = new StackPanel { Margin = new Thickness(18), Children = {
                 new TextBlock { Text = text }, never, new StackPanel { Orientation = Orientation.Horizontal,
                     HorizontalAlignment = HorizontalAlignment.Right, Children = { make, new Button { Content = "_Not now", IsCancel = true, MinWidth = 80 } } } } } };

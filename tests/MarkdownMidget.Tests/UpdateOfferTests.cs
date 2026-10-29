@@ -177,17 +177,17 @@ public class UpdateOfferTests
     private const string RealFeedShape = """
     [
       {"tag_name":"v0.6.2","prerelease":false,"draft":false,"html_url":"h",
-       "assets":[{"name":"MarkdownMidget-v0.6.2-win-x64-net10.exe","browser_download_url":"u","size":1}]},
+       "assets":[{"name":"MMEEEE-v0.6.2-win-x64.exe","browser_download_url":"u","size":1}]},
       {"tag_name":"v0.6.1","prerelease":false,"draft":false,"html_url":"h",
-       "assets":[{"name":"MarkdownMidget-v0.6.1-win-x64-net10.exe","browser_download_url":"u","size":1}]},
+       "assets":[{"name":"MMEEEE-v0.6.1-win-x64.exe","browser_download_url":"u","size":1}]},
       {"tag_name":"v0.6.0","prerelease":false,"draft":false,"html_url":"h",
-       "assets":[{"name":"MarkdownMidget-v0.6.0-win-x64-net10.exe","browser_download_url":"u","size":1}]},
+       "assets":[{"name":"MMEEEE-v0.6.0-win-x64.exe","browser_download_url":"u","size":1}]},
       {"tag_name":"v0.6.0-beta2","prerelease":true,"draft":false,"html_url":"h",
-       "assets":[{"name":"MarkdownMidget-v0.6.0-beta2-win-x64-net10.exe","browser_download_url":"u","size":1}]},
+       "assets":[{"name":"MMEEEE-v0.6.0-beta2-win-x64.exe","browser_download_url":"u","size":1}]},
       {"tag_name":"v0.6.0-beta1","prerelease":true,"draft":false,"html_url":"h",
-       "assets":[{"name":"MarkdownMidget-v0.6.0-beta1-win-x64-net10.exe","browser_download_url":"u","size":1}]},
+       "assets":[{"name":"MMEEEE-v0.6.0-beta1-win-x64.exe","browser_download_url":"u","size":1}]},
       {"tag_name":"v0.2.0-beta2","prerelease":false,"draft":false,"html_url":"h",
-       "assets":[{"name":"MarkdownMidget-v0.2.0-beta2-win-x64-net10.exe","browser_download_url":"u","size":1}]}
+       "assets":[{"name":"MMEEEE-v0.2.0-beta2-win-x64.exe","browser_download_url":"u","size":1}]}
     ]
     """;
 
@@ -211,7 +211,7 @@ public class UpdateOfferTests
         var check = ReleaseFeed.Select("""
         [
           {"tag_name":"v0.2.0-beta2","prerelease":false,"draft":false,"html_url":"h",
-           "assets":[{"name":"MarkdownMidget-v0.2.0-beta2-win-x64-net10.exe","browser_download_url":"u","size":1}]}
+           "assets":[{"name":"MMEEEE-v0.2.0-beta2-win-x64.exe","browser_download_url":"u","size":1}]}
         ]
         """);
         Assert.Null(check.Stable);

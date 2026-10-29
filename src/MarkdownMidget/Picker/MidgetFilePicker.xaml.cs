@@ -130,7 +130,7 @@ public partial class MidgetFilePicker : Window
             "No folder could be opened — not the one asked for, and not Documents, " +
             "your user folder or any drive. Something is wrong with this machine's " +
             "file system or permissions.",
-            "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+            AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
         AcceptButton.IsEnabled = false;
         NewFolderButton.IsEnabled = false;
     }
@@ -210,7 +210,7 @@ public partial class MidgetFilePicker : Window
     /// failure is expected and the next candidate is the answer.</summary>
     private bool Navigate(string path, bool addToHistory, bool quiet = false, bool sayIfMissing = false)
     {
-        if (!Directory.Exists(path)) { if (sayIfMissing) MessageBox.Show(this, "That folder doesn't exist.", "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Information); return false; }
+        if (!Directory.Exists(path)) { if (sayIfMissing) MessageBox.Show(this, "That folder doesn't exist.", AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Information); return false; }
         var target = Path.GetFullPath(path);
 
         var entries = new List<Entry>();
@@ -249,7 +249,7 @@ public partial class MidgetFilePicker : Window
         {
             if (!quiet)
                 MessageBox.Show(this, $"Couldn't list that folder:\n{ex.Message}",
-                    "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Information);
+                    AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Information);
             return false;
         }
 
@@ -353,7 +353,7 @@ public partial class MidgetFilePicker : Window
         }
         else
         {
-            MessageBox.Show(this, "That folder doesn't exist.", "Markdown Midget",
+            MessageBox.Show(this, "That folder doesn't exist.", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Information);
             AddressBox.Text = _currentDirectory;
         }
@@ -496,7 +496,7 @@ public partial class MidgetFilePicker : Window
         var resolved = FilePickerModel.ResolveTypedPath(typed, _currentDirectory);
         if (resolved is null)
         {
-            MessageBox.Show(this, "That name can't be used as a file name.", "Markdown Midget",
+            MessageBox.Show(this, "That name can't be used as a file name.", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
@@ -528,19 +528,19 @@ public partial class MidgetFilePicker : Window
             var dir = Path.GetDirectoryName(path);
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
             {
-                MessageBox.Show(this, "That folder doesn't exist.", "Markdown Midget",
+                MessageBox.Show(this, "That folder doesn't exist.", AppIdentity.Name,
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             if (File.Exists(path) && MessageBox.Show(this,
-                    $"{Path.GetFileName(path)} already exists.\nReplace it?", "Markdown Midget",
+                    $"{Path.GetFileName(path)} already exists.\nReplace it?", AppIdentity.Name,
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 return;
         }
         else if (_request.CheckFileExists && !File.Exists(path))
         {
             MessageBox.Show(this, $"{Path.GetFileName(path)} wasn't found in this folder.",
-                "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Information);
+                AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
@@ -558,7 +558,7 @@ public partial class MidgetFilePicker : Window
         if (name.Length == 0) return;
         if (name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
         {
-            MessageBox.Show(this, "That name can't be used as a folder name.", "Markdown Midget",
+            MessageBox.Show(this, "That name can't be used as a folder name.", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
@@ -570,7 +570,7 @@ public partial class MidgetFilePicker : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, $"Couldn't create the folder:\n{ex.Message}", "Markdown Midget",
+            MessageBox.Show(this, $"Couldn't create the folder:\n{ex.Message}", AppIdentity.Name,
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }

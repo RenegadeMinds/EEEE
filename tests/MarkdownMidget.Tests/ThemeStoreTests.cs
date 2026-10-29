@@ -39,7 +39,7 @@ public class ThemeStoreTests : IDisposable
     public void AnInstalledBuildKeepsThemesInTheProfile()
     {
         var (root, fellBack) = ThemeStore.ResolveRoot(installed: true, @"C:\somewhere\else", _dir);
-        Assert.Equal(Path.Combine(_dir, "MarkdownMidget", "themes"), root);
+        Assert.Equal(Path.Combine(_dir, "EEEE", "themes"), root);
         Assert.False(fellBack);
     }
 
@@ -68,7 +68,7 @@ public class ThemeStoreTests : IDisposable
         File.WriteAllText(Path.Combine(blocked, "themes"), "not a directory");
 
         var (root, fellBack) = ThemeStore.ResolveRoot(installed: false, blocked, _dir);
-        Assert.Equal(Path.Combine(_dir, "MarkdownMidget", "themes"), root);
+        Assert.Equal(Path.Combine(_dir, "EEEE", "themes"), root);
         Assert.True(fellBack);
     }
 
@@ -88,7 +88,7 @@ public class ThemeStoreTests : IDisposable
         Directory.CreateDirectory(Path.Combine(exeDir, "themes", ".write-probe"));
 
         var (root, fellBack) = ThemeStore.ResolveRoot(installed: false, exeDir, _dir);
-        Assert.Equal(Path.Combine(_dir, "MarkdownMidget", "themes"), root);
+        Assert.Equal(Path.Combine(_dir, "EEEE", "themes"), root);
         Assert.True(fellBack);
     }
 

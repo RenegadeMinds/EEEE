@@ -181,14 +181,14 @@ internal static class PickerCrashClues
                        : "the Details tab of its Properties in Explorer names the program it came with.");
         }
         if (f.FaultKind == FaultKind.Unidentified)
-            return $"Windows recorded the crash in {fault.Module}, but Markdown Midget can't tell whose file that is. " +
+            return $"Windows recorded the crash in {fault.Module}, but MMEEEE can't tell whose file that is. " +
                    "If it isn't part of Windows, it may be the add-on.";
         var what = f.FaultKind switch
         {
             FaultKind.Unnamed => $"a file it couldn't name (exception {fault.ExceptionCode})",
             FaultKind.Windows => $"{fault.Module}, part of Windows",
             FaultKind.Microsoft => $"{fault.Module}, a Microsoft file",
-            _ => $"{fault.Module}, Markdown Midget itself",
+            _ => $"{fault.Module}, MMEEEE itself",
         };
         return $"Windows recorded the crash in {what}. That doesn't name the add-on: Windows records where a crash was reported, " +
                "which is not always where it began, so the list below is the better lead.";
@@ -353,7 +353,7 @@ internal static class PickerCrashClues
     public static string Details(PickerCrashFindings f, string appVersion, string osVersion, PickerSwitch? switched = null)
     {
         var text = new StringBuilder()
-            .AppendLine($"Markdown Midget {appVersion}: Windows' file dialog closed unexpectedly")
+            .AppendLine($"MMEEEE {appVersion}: Windows' file dialog closed unexpectedly")
             .AppendLine($"Windows: {osVersion}")
             .AppendLine($"The helper's exit code: 0x{f.ExitCode:X8}");
         if (switched is not null) text.AppendLine(PickerOffer.LogLine(switched));   // settings.json keeps it too; logs are pruned

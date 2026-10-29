@@ -796,7 +796,7 @@ public class OpenGuardTests : IDisposable
         // The startup parser's rule, shared by App.OnStartup and the window: the
         // first existing file that isn't the VALUE of --recover or --finish-move.
         // The latter's value is the downloaded exe, which very much exists.
-        var exe = Doc("MarkdownMidget.exe");
+        var exe = Doc("MMEEEE.exe");
         var doc = Doc("notes.md");
         File.WriteAllText(exe, "");
         File.WriteAllText(doc, "");
@@ -829,7 +829,7 @@ public class OpenGuardTests : IDisposable
     public void MoveRelaunchCarriesMakeDefaultAndTheDocument(bool makeDefault, bool withDocument)
     {
         // Register with Move starts the installed copy with these; its startup reads them back.
-        var exe = Doc("MarkdownMidget.exe");
+        var exe = Doc("MMEEEE.exe");
         var doc = Doc("notes.md");
         File.WriteAllText(exe, "");
         File.WriteAllText(doc, "");
@@ -845,7 +845,7 @@ public class OpenGuardTests : IDisposable
     {
         var expected = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "MarkdownMidget", "open");
+            "EEEE", "open");
         Assert.Equal(expected, OpenGuard.DefaultDirectory);
     }
 }

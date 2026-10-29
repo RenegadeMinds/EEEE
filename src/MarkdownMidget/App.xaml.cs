@@ -78,10 +78,10 @@ public partial class App : Application
             try
             {
                 MessageBox.Show(
-                    "Markdown Midget hit an unexpected error and kept running.\n\n" +
+                    "MMEEEE hit an unexpected error and kept running.\n\n" +
                     $"Details were saved to:\n{CrashLog.LogPath}\n\n" +
                     "If this keeps happening, that file is what to send with the report.",
-                    "Markdown Midget", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AppIdentity.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             catch { /* a broken message box must not undo the recovery */ }
         };
@@ -133,7 +133,10 @@ public partial class App : Application
         }
 
         // The editor window, created explicitly rather than by StartupUri (see
-        // above). Everything it needs comes from the command line it reads itself.
-        new MainWindow().Show();
+        // above). The tabbed window is the default; --notabs (and the launches the
+        // classic window makes for itself: --new, --recover, the help window, ...)
+        // start the classic one-document window, which reads its own command line.
+        if (Tabs.TabsStartup.UseClassicWindow(args)) new MainWindow().Show();
+        else new Tabs.MainTabs(MarkdownMidget.MainWindow.DocumentArgument(args)).Show();
     }
 }
