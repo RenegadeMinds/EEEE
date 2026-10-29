@@ -29,3 +29,8 @@ dist/
 # External-change backups (created by MM's watcher; content lives inside .exe workspace)
 *.bak
 *.md.bak
+
+# Python (Tabs/scripts/converter): bytecode cache, and scratch output if run here
+__pycache__/
+*.pyc
+_work/
